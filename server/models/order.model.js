@@ -1,0 +1,1 @@
+// add toggle variable to the order purchase submit button to make sure that delivery method stays pre-populated after first time filling out the pizza form for adding multiple pizzas to the order so that each order has a delivery method for all pizzas requested. NOT one delivery method per each pizza in the single order.
