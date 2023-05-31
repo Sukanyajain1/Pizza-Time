@@ -5,7 +5,7 @@ const PizzaController = require("../controllers/pizza.controller");
 module.exports = (app)=>{
     app.get("/api/hello", PizzaController.sayHello);
     app.get("/api/pizzas", PizzaController.findAllPizzas);
-    app.post("/api/pizzas", PizzaController.createPizza);
+    app.post("/api/pizzas", PizzaController.createPizza);   //create a new pizza
     app.get("/api/pizzas/random", PizzaController.findRandomPizza);  // find a random Pizza
 
     /* 
