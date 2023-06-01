@@ -6,6 +6,7 @@ const db = {};
 db.mongoose = mongoose;
 
 db.user = require("./user.model");
+db.sauce = require("./sauce.model");
 db.topping = require("./topping.model");
 db.pizzaSize = require("./pizzaSize.model");
 db.crust = require("./crust.model");

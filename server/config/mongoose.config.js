@@ -1,5 +1,6 @@
 const db_name = "pizza_time_schema";
 const db = require("../models/index");
+const sauces = db.sauce;
 const toppings = db.topping;
 const pizzaSizes = db.pizzaSize;
 const crusts = db.crust;
@@ -13,6 +14,7 @@ db.mongoose.connect(`mongodb+srv://root:root@clustermay.nvakqpq.mongodb.net/${db
 })
     .then(()=>{
         console.log("Established a connection to the database");
+        sauces.initial();
         toppings.initial();
         pizzaSizes.initial();
         crusts.initial();

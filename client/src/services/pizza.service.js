@@ -1,66 +1,57 @@
 import axios from 'axios';
+import DataService from '../services/data.service'
 
 
-const getAllDBToppings = ()=>{
-    axios.get("http://localhost:8000/api/toppings")
-    .then((res)=>{
-        console.log("This is the api result: ", res);
-        return(res.data.results)
-    })
-    .catch(err=>{
-        return("Axios error: ", err);
-    });
+const getOnePizza = (_id)=>{
+    axios.get(`http://localhost:8000/api/pizzas/show_one/${_id}`)
 }
 
-
-const getAllDBCrusts = ()=>{
-    axios.get("http://localhost:8000/api/crusts")
-        .then((res)=>{
-            console.log("This is the api result: ", res);
-            return(res.data.results)
-        })
-        .catch(err=>{
-            return("Axios error: ", err);
-        });
-    }
-
-const getAllDBPieSizes = ()=>{
-    axios.get("http://localhost:8000/api/pizzaSizes")
-        .then((res)=>{
-            console.log("This is the api result: ", res);
-            return(res.data.results)
-        })
-        .catch(err=>{
-            return("Axios error: ", err);
-        });
-    }
-
-const submitHandler = (e, formInfo, submitEndpoint)=>{
-    e.preventDefault();
-    axios.post(`http://localhost:8000/api/pizzas/${submitEndpoint}`, formInfo)
-    .then((res)=>{
-        console.log("Response after axios put request: ", res);
-        if(res.data.error){
-            // this means there are validation errors we need to save
-            return(res.data.error.errors);
-        }else{
-            return res;
-        }
-    })
-    .catch(err=>{
-        return("Axios POST Route error: ", err)
-    })
+const submitNewPizza = (formInfo)=>{
+    axios.post("http://localhost:8000/api/pizzas/new", formInfo)
 }
 
+const submitUpdatePizza = (formInfo, _id)=>{
+    axios.put(`http://localhost:8000/api/expenses/update/${_id}`, formInfo)
+}    
 
+const sumTotalPrice = (priceObj)=>{
+    const {pizzaSize, crust, toppings} = priceObj
+    const totalPrice = (pizzaSize + crust + toppings)
+    return totalPrice
+}
 
-
+const toppingIsChecked= (toppingsArray)=>{
+    let toppingBooleans = {
+        isPepperoni: false,
+        isChicken: false,
+        isGroundBeef: false,
+        isOlives: false,
+        isOnions: false,
+        isMushroom: false,
+        isPineapple: false,
+        isBellPeppers: false,
+        isSpinach: false
+    }
+    if (toppingsArray){
+        toppingsArray.map((oneTopping)=>{
+            DataService.getAllDBToppings.map((item)=>{
+                if (oneTopping === item.name){
+                    toppingBooleans[item.checkedKey] = !toppingBooleans[item.checkedKey]
+                }
+            })
+        })
+    }
+    return toppingBooleans
+}
+// const  create a price total sum handler for the submission
+// add the function to the change handler and the topping handler so that it gets executed everytime there is a change to the formInfo ---> redundant?
 
 const PizzaService = {
-    getAllDBToppings,
-    getAllDBCrusts,
-    getAllDBPieSizes,
-    submitHandler,
+    getOnePizza,
+    submitNewPizza,
+    submitUpdatePizza,
+    sumTotalPrice,
+    toppingIsChecked
 };
 
 export default PizzaService;

@@ -1,32 +1,107 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
+import PizzaService from '../services/pizza.service';
+import DataService from '../services/data.service';
 
 
 const PizzaForm = (props) => {
     const {
         submitHandler,
-        changeHandler,
+        // changeHandler,
         formInfo, setFormInfo,
         // formToppings, setFormToppings,
         toppingBooleans, setToppingBooleans,
         // priceBreakdown, setPriceBreakdown,
-        allDBToppings, setAllDBToppings,
-        allDBCrusts, setAllDBCrusts,
-        allDBPieSizes, setAllDBPieSizes,
         formErrors,
         buttonValue,
     } = props;
     
+    const [allDBSauces, setAllDBSauces] = useState([]);
+    const [allDBToppings, setAllDBToppings] = useState([]);
+    const [allDBCrusts, setAllDBCrusts] = useState([]);
+    const [allDBPieSizes, setAllDBPieSizes] = useState([]);
 
-    // const [tester, setTester] = useState([]);
-    // const [selectedToppings, setSelectedToppings] = useState([]);
+
+    // const allDBToppings = DataService.getAllDBToppings()
+    // const allDBCrusts = DataService.getAllDBCrusts()
+    // const allDBPieSizes = DataService.getAllDBPieSizes()
 
     useEffect(() => {
+        // const getAllDBSauces = ()=>{
+            axios.get("http://localhost:8000/api/sauces")
+            .then((res)=>{
+                console.log("This is the api result: ", res);
+                setAllDBSauces(res.data.results)
+            })
+            .catch(err=>{
+                console.log("Axios error: ", err);
+            });
+        // }
         
+        
+        // const getAllDBToppings = ()=>{
+            axios.get("http://localhost:8000/api/toppings")
+            .then((res)=>{
+                console.log("This is the api result: ", res);
+                setAllDBToppings(res.data.results)
+            })
+            .catch(err=>{
+                console.log("Axios error: ", err);
+            });
+        // }
+        
+        
+        // const getAllDBCrusts = ()=>{
+            axios.get("http://localhost:8000/api/crusts")
+                .then((res)=>{
+                    console.log("This is the api result: ", res);
+                    setAllDBCrusts(res.data.results) 
+                })
+                .catch(err=>{
+                    console.log("Axios error: ", err);
+                });
+            // }
+        
+        
+        // const getAllDBPieSizes = ()=>{
+            axios.get("http://localhost:8000/api/pizzaSizes")
+                .then((res)=>{
+                    console.log("This is the api result: ", res);
+                    setAllDBPieSizes(res.data.results)
+                })
+                .catch(err=>{
+                    console.log("Axios error: ", err);
+                });
+            // }
+        // setAllDBToppings(DataService.getAllDBToppings())
+        // setAllDBCrusts(DataService.getAllDBCrusts())
+        // setAllDBPieSizes(DataService.getAllDBPieSizes())
     }, []);
     
 
-
+    // changehandler to update the formInfo object with the information from the form
+    const changeHandler = (e)=>{
+        console.log("changing the form!")
+        setFormInfo({
+            ...formInfo,
+            [e.target.name]: e.target.value,
+            total: PizzaService.sumTotalPrice(formInfo.price, formInfo.quantity)
+        });
+        
+        if (e.target.name !== "quantity"){
+            // const {pizzaSize, crust, toppings} = formInfo.price
+            let eventPrice = document.querySelector(`option[value="${e.target.value}"]`).dataset.price
+            setFormInfo({
+                ...formInfo,
+                [e.target.name]: e.target.value,
+                price: {
+                    ...formInfo.price,
+                    [e.target.name]: Number(eventPrice)
+                }
+            });
+            console.log("THE FORM INFO STATE VARIABLE: ", formInfo)
+        }
+    }
 
     const toggleToppings = (e, oneToppingName, oneToppingKey) => {
         if(e.target.type === "checkbox"){
@@ -37,7 +112,7 @@ const PizzaForm = (props) => {
                 // Remove the existing id 
                 setFormInfo({
                     ...formInfo,
-                    [e.target.name]: formInfo[e.target.name].filter(item => item != oneToppingName),
+                    [e.target.name]: formInfo[e.target.name].filter(item => item !== oneToppingName),
                     price: {
                         ...formInfo.price,
                         [e.target.name]: formInfo.price[e.target.name] - eventPrice
@@ -96,10 +171,24 @@ const PizzaForm = (props) => {
                     <p className="text-danger">{formErrors.crust?.message}</p>
                 </div>
                 <div className="form-group">
+                    <label htmlFor="">Sauce:</label>
+                    <select onChange= {changeHandler} name="sauce" value={formInfo.sauce} className="form-select">
+                        <option value=""disabled>Select a sauce!</option>
+                        {
+                            allDBSauces.map((sauceObj, idx)=>{
+                                return(
+                                    <option key={idx} data-price={sauceObj.price} value={sauceObj.name}>{sauceObj.name}</option>
+                                )
+                            })
+                        }
+                    </select>
+                    <p className="text-danger">{formErrors.sauce?.message}</p>
+                </div>
+                {/* <div className="form-group">
                     <label htmlFor="">QTY:</label>
                     <input type="number" min="1" name="quantity" value={formInfo.quantity} className="form-control" onChange={changeHandler}/>
                     <p className="text-danger">{formErrors.quantity?.message}</p>
-                </div>
+                </div> */}
 
                 <h4>Toppings:</h4>
                 {/* RE-SIZE THIS DIV TO CONTAIN ALL TOPPINGS WITH CHECKBOX */}

@@ -26,9 +26,7 @@ const PizzaSchema = new mongoose.Schema({
         ]
     },
     quantity: {
-        type: String,
-        required: [true, 'Quantity is required'],
-        min: [1, "Quantity cannot be less than 1."]
+        type: Number
     },
     toppings: {
         type: [String],
