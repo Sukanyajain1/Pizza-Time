@@ -39,13 +39,16 @@ const NewPizza = (props) => {
         pizzaSize: "",
         crust: "",
         quantity: "",
-        price: "",
+        price: {
+            pizzaSize: null,
+            crust: null,
+            toppings: null,
+            total: null
+        },
         toppings: [],
         user_id: "",
         order_id: ""
     });
-
-    // const [formToppings, setFormToppings] = useState([]);
 
     // TOPPINGS CHECKBOX BOOLEANS
     const [toppingBooleans, setToppingBooleans] = useState({
@@ -60,15 +63,7 @@ const NewPizza = (props) => {
         isSpinach: false
     });
 
-    // Pizza Price Breakdown
-    const [priceBreakdown, setPriceBreakdown] = useState({
-        pizzaSize: null,
-        crust: null,
-        quantity: null,
-        toppings: null
-    });
 
-    const [toppings, setToppings] = useState([]);
 
     // -----------------------------------------------------------------------------
     // USER AUTH for currently logged user
@@ -76,6 +71,7 @@ const NewPizza = (props) => {
     useEffect(()=>{
         setLoggedUser(userAuth);
     }, [])
+
 
     // changehandler to update the formInfo object with the information from the form
     const changeHandler = (e)=>{
@@ -88,9 +84,13 @@ const NewPizza = (props) => {
         
         if (e.target.name != "quantity"){
             let eventPrice = document.querySelector(`option[value="${e.target.value}"]`).dataset.price
-            setPriceBreakdown({
-                ...priceBreakdown,
-                [e.target.name]: Number(eventPrice)
+            setFormInfo({
+                ...formInfo,
+                [e.target.name]: e.target.value,
+                price: {
+                    ...formInfo.price,
+                    [e.target.name]: Number(eventPrice)
+                }
             });
             console.log("THE FORM INFO STATE VARIABLE: ", formInfo)
         }
@@ -112,7 +112,12 @@ const NewPizza = (props) => {
                     crust: "",
                     quantity: null,
                     toppings: [],
-                    price: null,
+                    price: {
+                        pizzaSize: null,
+                        crust: null,
+                        toppings: null,
+                        total: null
+                    },
                     user_id: null,
                     order_id: null
                 });
@@ -127,6 +132,36 @@ const NewPizza = (props) => {
         .catch(err=>{
             console.log("Axios POST Route error: ", err)
         })
+
+
+        /*
+    const submitNewPizza = PizzaService.submitHandler(e, formInfo, submitEndpoint);
+    if (submitNewPizza.errors) {
+        setFormErrors(submitNewPizza.errors)
+    }
+    else{// else means there are no errors, so we can clear our the state variables to clear out the form
+        setFormInfo({
+            size: "",
+            crust: "",
+            quantity: null,
+            toppings: [],
+            price: {
+                pizzaSize: null,
+                crust: null,
+                toppings: null,
+                total: null
+            },
+            user_id: null,
+            order_id: null
+        });
+
+        // clear out any past error messages
+        setFormErrors({});
+        
+        navigate("pizza-time/order-summary");
+        window.location.reload();
+    }
+*/
     }    
 
     
@@ -140,14 +175,8 @@ const NewPizza = (props) => {
                 formInfo={formInfo}
                 setFormInfo={setFormInfo}
 
-                // formToppings={formToppings}
-                // setFormToppings={setFormToppings}
-
                 toppingBooleans={toppingBooleans}
                 setToppingBooleans={setToppingBooleans}
-
-                priceBreakdown={priceBreakdown}
-                setPriceBreakdown={setPriceBreakdown}
 
                 allDBToppings={allDBToppings}
                 setAllDBToppings={setAllDBToppings}

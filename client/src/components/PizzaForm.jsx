@@ -9,7 +9,7 @@ const PizzaForm = (props) => {
         formInfo, setFormInfo,
         // formToppings, setFormToppings,
         toppingBooleans, setToppingBooleans,
-        priceBreakdown, setPriceBreakdown,
+        // priceBreakdown, setPriceBreakdown,
         allDBToppings, setAllDBToppings,
         allDBCrusts, setAllDBCrusts,
         allDBPieSizes, setAllDBPieSizes,
@@ -18,50 +18,15 @@ const PizzaForm = (props) => {
     } = props;
     
 
-    const [tester, setTester] = useState([]);
+    // const [tester, setTester] = useState([]);
     // const [selectedToppings, setSelectedToppings] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:8000/api/toppings")
-            .then((res)=>{
-                console.log("This is the api result: ", res);
-                setAllDBToppings(res.data.results)
-            })
-            .catch(err=>{
-                console.log("Axios error: ", err);
-            });
-
-        axios.get("http://localhost:8000/api/crusts")
-            .then((res)=>{
-                console.log("This is the api result: ", res);
-                setAllDBCrusts(res.data.results)
-            })
-            .catch(err=>{
-                console.log("Axios error: ", err);
-            });
-
-        axios.get("http://localhost:8000/api/pizzaSizes")
-            .then((res)=>{
-                console.log("This is the api result: ", res);
-                setAllDBPieSizes(res.data.results)
-            })
-            .catch(err=>{
-                console.log("Axios error: ", err);
-            });
+        
     }, []);
     
 
-    // const changeHandler = (e)=>{
-    //     console.log("changing the form!")
-    //     setFormInfo({
-    //         ...formInfo,
-    //         [e.target.name]: e.target.value
-    //     });
-        
-    //     e.target.name === "crust"?
-    //     crustPriceSetter()
-    //     console.log("THE FORM INFO STATE VARIABLE: ", formInfo)
-    // }
+
 
     const toggleToppings = (e, oneToppingName, oneToppingKey) => {
         if(e.target.type === "checkbox"){
@@ -72,22 +37,20 @@ const PizzaForm = (props) => {
                 // Remove the existing id 
                 setFormInfo({
                     ...formInfo,
-                    [e.target.name]: formInfo[e.target.name].filter(item => item != oneToppingName)
+                    [e.target.name]: formInfo[e.target.name].filter(item => item != oneToppingName),
+                    price: {
+                        ...formInfo.price,
+                        [e.target.name]: formInfo.price[e.target.name] - eventPrice
+                    }
                 })
-                // const newVal = priceBreakdown[e.target.name] - eventPrice
-                setPriceBreakdown({
-                        ...priceBreakdown,
-                        [e.target.name]: priceBreakdown[e.target.name] - eventPrice
-                    })
             } else {
                 setFormInfo({
                     ...formInfo,
-                    [e.target.name]: [...formInfo[e.target.name], oneToppingName]
-                })
-                // const newVal = priceBreakdown[e.target.name] + eventPrice
-                setPriceBreakdown({
-                    ...priceBreakdown,
-                    [e.target.name]: priceBreakdown[e.target.name] + eventPrice              
+                    [e.target.name]: [...formInfo[e.target.name], oneToppingName],
+                    price: {
+                        ...formInfo.price,
+                        [e.target.name]: formInfo.price[e.target.name] + eventPrice
+                    }
                 })
             }
             setToppingBooleans({

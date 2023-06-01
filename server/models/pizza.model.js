@@ -35,11 +35,6 @@ const PizzaSchema = new mongoose.Schema({
         default: undefined
     },
     price: {
-    type: String,
-    required: [true, 'Price is required'],  
-    min: [0.01, 'Price cannot be $0. Please review your pizza.']      
-    },
-    priceBreakdown: {
         pizzaSize: {
             type: Number,
             required: [true, 'size price is required']
@@ -52,7 +47,11 @@ const PizzaSchema = new mongoose.Schema({
             type: Number,
             required: [true, 'toppings price is required']
         },
-    
+        total: {
+            type: Number,
+            required: [true, 'Total Price is required'],  
+            min: [0.01, 'Total Price cannot be $0. Please review your pizza.']
+        }
     },
 
     // add the user._id for the user that created this object
