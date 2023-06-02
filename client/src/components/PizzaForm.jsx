@@ -14,6 +14,7 @@ const PizzaForm = (props) => {
         // priceBreakdown, setPriceBreakdown,
         formErrors,
         buttonValue,
+        currentUser
     } = props;
     
     const [allDBSauces, setAllDBSauces] = useState([]);
@@ -89,7 +90,8 @@ const PizzaForm = (props) => {
             [e.target.name]: e.target.value,
             price: {
                 ...formInfo.price,
-                [e.target.name]: Number(eventPrice)
+                [e.target.name]: Number(eventPrice),
+                total: PizzaService.sumTotalPrice(formInfo.price)
             }
         });
         
@@ -147,6 +149,7 @@ const PizzaForm = (props) => {
             <h2 className="float-center">CRAFT-A-PIZZA</h2>
             {/* <h3>The console logger: {formInfo.toppings}</h3> */}
             <form onSubmit={submitHandler} action="" className="">
+            <input type="text" className="hidden" name="user_id" value={currentUser._id}/>
                 <div className="form-group">
                     <label htmlFor="">Size: </label>
                     <select onChange= {changeHandler} name="pizzaSize" value={formInfo.pizzaSize} className="form-select">
@@ -159,7 +162,7 @@ const PizzaForm = (props) => {
                             })
                         }
                     </select>
-                    <p className="text-danger">{formErrors.size?.message}</p>
+                    <p className="text-danger">{formErrors.pizzaSize?.message}</p>
                 </div>
                 <div className="form-group">
                     <label htmlFor="">Crust:</label>

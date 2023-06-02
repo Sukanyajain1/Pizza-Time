@@ -2,7 +2,7 @@ const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-console.log("process env jauns", process.env.SECRET_KEY)
+console.log("process env", process.env.SECRET_KEY)
 
 
 

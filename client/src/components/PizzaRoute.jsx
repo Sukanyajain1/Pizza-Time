@@ -1,16 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 
-import { useNavigate, Outlet, redirect } from "react-router-dom";
+import { useNavigate, Outlet, useOutletContext } from "react-router-dom";
 
 
 
 
 
 const PizzaRoute = () => {
+    const [currentUser, componentDidMount, isLogged] = useOutletContext();
+
     return (
         <>
-            <Outlet/>
+            <Outlet context={[currentUser, componentDidMount, isLogged]}/>
         </>
     );
 }

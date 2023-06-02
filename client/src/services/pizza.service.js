@@ -32,7 +32,8 @@ const toppingIsChecked= (toppingsArray)=>{
         isBellPeppers: false,
         isSpinach: false
     }
-    if (toppingsArray){
+    console.log(toppingsArray)
+    if (toppingsArray.length !==0){
         toppingsArray.map((oneTopping)=>{
             DataService.getAllDBToppings.map((item)=>{
                 if (oneTopping === item.name){

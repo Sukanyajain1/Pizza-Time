@@ -1,26 +1,44 @@
 import React, {useEffect, useState} from 'react';
 
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useOutletContext, Link } from "react-router-dom";
 
-const Dashboard = (props) => {
+const Dashboard = () => {
 
-    const navigate = useNavigate();
-    const [loggedUser, setLoggedUser] = useState({});
-    const {userAuth, currentUser} = props;
-
+    // const navigate = useNavigate();
+    // const [loggedUser, setLoggedUser] = useState({});
+    // const {currentUser} = props;
+    const [currentUser, authToggle, setAuthToggle, isLoading, isLogged] = useOutletContext();
 
     useEffect(()=>{
-        setLoggedUser(userAuth);               //what is useReducer????
+        setAuthToggle(!authToggle) 
+        console.log("DASHBOARD: ", currentUser)
+        // setLoggedUser(componentDidMount);               //what is useReducer????
     }, [])
 
-
+    if(isLoading){
+        return (
+            <h1>Loading...</h1>
+        )
+    }
+    
     return (
         <div>
-            <h1>Welcome {currentUser.firstName}, you're in the dashboard! Congrats on being a registered user!</h1>
-            <Link to={"/pizza-time/pizza/new"} className="nav-link">Add a Pizza to your order</Link>
+            {currentUser._id?
+            <div>
+                {/* {console.log("THIS IS THE CURRENT USER", currentUser)} */}
+                <h1>Welcome {currentUser.firstName}, you're in the dashboard! Congrats on being a registered user!</h1>
+                <Link to={"/pizza-time/pizza/new"} className="nav-link">Add a Pizza to your order</Link>
+            </div>
+            : <div>
+                <h1>Sorry! Seems like you're not logged in yet!</h1>
+                <Link to={"/welcome/login"} className="nav-link">Sign in Here and Start your Pizza Party!</Link>
+            </div>
+            }
         </div>
     );
 };
 
 
 export default Dashboard;
+
+// 64747b81755ae0a353fa5d88
