@@ -28,7 +28,12 @@ const OrderSchema = new mongoose.Schema ({
     user_id: {
         type: mongoose.Schema.Types.ObjectId, //this is my Order Type
         ref: "Order" //this is the name of my Order Model from the order.model.js
-    }
+    },
+    // add the user._id for the user that created this object
+    pizza_id: [{
+        type: mongoose.Schema.Types.ObjectId, //this is my Pizza Type
+        ref: "Pizza" //this is the name of my Pizza Model from the pizza.model.js
+    }]
     }, {timestamps: true}
 );
 

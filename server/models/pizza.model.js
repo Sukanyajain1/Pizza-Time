@@ -25,8 +25,22 @@ const PizzaSchema = new mongoose.Schema({
             "Classic"
         ]
     },
-    quantity: {
-        type: Number
+    sauce: {
+        type: String,
+        required: [true, 'Sauce is required'],
+        enum: [
+            "Classic Marinara",
+            "Cheesy Alfredo",
+            "Fresh Basil Pesto"
+        ]
+    },
+    orderStatus: {
+        type: String,
+        required: [true, 'Sauce is required'],
+        enum: [
+            "pending",
+            "submitted"
+        ]
     },
     toppings: {
         type: [String],
@@ -51,17 +65,10 @@ const PizzaSchema = new mongoose.Schema({
             min: [0.01, 'Total Price cannot be $0. Please review your pizza.']
         }
     },
-
     // add the user._id for the user that created this object
     user_id: {
         type: mongoose.Schema.Types.ObjectId, //this is my User Type
         ref: "User" //this is the name of my user Model from the user.model.js
-    },
-
-    // add the order._id for the order that this object belongs to
-    order_id: {
-        type: mongoose.Schema.Types.ObjectId, //this is my Order Type
-        ref: "Order" //this is the name of my Order Model from the order.model.js
     }
 }, {timestamps:true})
 

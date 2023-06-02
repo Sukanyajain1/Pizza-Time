@@ -70,7 +70,7 @@ const EditExpense = (props) => {
     // }
 
 
-    useEffect((_id) => {
+    useEffect(() => {
         setLoggedUser(userAuth);
 
         PizzaService.getOnePizza(_id)
@@ -123,7 +123,7 @@ const EditExpense = (props) => {
     //     })
     // }    
     
-    const submitHandler = (e, _id)=>{
+    const submitHandler = (e)=>{
         e.preventDefault();
 
         setFormInfo({
@@ -159,8 +159,8 @@ const EditExpense = (props) => {
                 toppingBooleans={toppingBooleans}
                 setToppingBooleans={setToppingBooleans}
 
-                priceBreakdown={priceBreakdown}
-                setPriceBreakdown={setPriceBreakdown}
+                // priceBreakdown={priceBreakdown}
+                // setPriceBreakdown={setPriceBreakdown}
 
                 // allDBToppings={allDBToppings}
                 // setAllDBToppings={setAllDBToppings}

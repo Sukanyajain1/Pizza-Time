@@ -15,7 +15,7 @@ module.exports = (app)=>{
     
     */
 
-    app.get("/api/pizzas/:id", PizzaController.findOnePizza);
+    app.get("/api/pizzas/show_one/:id", PizzaController.findOnePizza);
     app.put("/api/pizzas/:id", PizzaController.updatePizza);
     app.delete("/api/pizzas/:id", PizzaController.deletePizza);
 

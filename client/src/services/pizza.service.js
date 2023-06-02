@@ -15,9 +15,9 @@ const submitUpdatePizza = (formInfo, _id)=>{
 }    
 
 const sumTotalPrice = (priceObj)=>{
-    const {pizzaSize, crust, toppings} = priceObj
-    const totalPrice = (pizzaSize + crust + toppings)
-    return totalPrice
+    let {pizzaSize, crust, sauce, toppings, total} = priceObj
+    total = (pizzaSize*10 + sauce*10 + toppings*10 + crust*10) /10
+    return total
 }
 
 const toppingIsChecked= (toppingsArray)=>{

@@ -82,25 +82,30 @@ const PizzaForm = (props) => {
     // changehandler to update the formInfo object with the information from the form
     const changeHandler = (e)=>{
         console.log("changing the form!")
+        let eventPrice = document.querySelector(`option[value="${e.target.value}"]`).dataset.price
+        // const {pizzaSize: a, crust: b, sauce: c, toppings: d} = formInfo.price
         setFormInfo({
             ...formInfo,
             [e.target.name]: e.target.value,
-            total: PizzaService.sumTotalPrice(formInfo.price, formInfo.quantity)
+            price: {
+                ...formInfo.price,
+                [e.target.name]: Number(eventPrice)
+            }
         });
         
-        if (e.target.name !== "quantity"){
+        
             // const {pizzaSize, crust, toppings} = formInfo.price
-            let eventPrice = document.querySelector(`option[value="${e.target.value}"]`).dataset.price
-            setFormInfo({
-                ...formInfo,
-                [e.target.name]: e.target.value,
-                price: {
-                    ...formInfo.price,
-                    [e.target.name]: Number(eventPrice)
-                }
-            });
+            // setFormInfo({
+            //     ...formInfo,
+            //     [e.target.name]: e.target.value,
+            //     price: {
+            //         ...formInfo.price,
+            //         [e.target.name]: Number(eventPrice),
+            //         total: PizzaService.sumTotalPrice(formInfo.price, formInfo.quantity)
+            //     }
+            // });
             console.log("THE FORM INFO STATE VARIABLE: ", formInfo)
-        }
+        
     }
 
     const toggleToppings = (e, oneToppingName, oneToppingKey) => {
@@ -140,7 +145,7 @@ const PizzaForm = (props) => {
     return (
         <>
             <h2 className="float-center">CRAFT-A-PIZZA</h2>
-            <h3>The console logger: {formInfo.toppings}</h3>
+            {/* <h3>The console logger: {formInfo.toppings}</h3> */}
             <form onSubmit={submitHandler} action="" className="">
                 <div className="form-group">
                     <label htmlFor="">Size: </label>
@@ -149,7 +154,7 @@ const PizzaForm = (props) => {
                         {
                             allDBPieSizes.map((sizeObj, idx)=>{
                                 return(
-                                    <option key={idx} data-price={sizeObj.price} value={sizeObj.name}>{sizeObj.name}</option>
+                                    <option key={idx} data-price={sizeObj.price} value={sizeObj.name}>{sizeObj.name} - {sizeObj.price}</option>
                                 )
                             })
                         }
@@ -163,7 +168,7 @@ const PizzaForm = (props) => {
                         {
                             allDBCrusts.map((crustObj, idx)=>{
                                 return(
-                                    <option key={idx} data-price={crustObj.price} value={crustObj.name}>{crustObj.name}</option>
+                                    <option key={idx} data-price={crustObj.price} value={crustObj.name}>{crustObj.name} - {crustObj.price}</option>
                                 )
                             })
                         }
@@ -177,7 +182,7 @@ const PizzaForm = (props) => {
                         {
                             allDBSauces.map((sauceObj, idx)=>{
                                 return(
-                                    <option key={idx} data-price={sauceObj.price} value={sauceObj.name}>{sauceObj.name}</option>
+                                    <option key={idx} data-price={sauceObj.price} value={sauceObj.name}>{sauceObj.name} - {sauceObj.price}</option>
                                 )
                             })
                         }
@@ -215,6 +220,8 @@ const PizzaForm = (props) => {
                     </li> */}
 
                 <input type="submit" value={buttonValue} className='btn btn-success mt-3'/>
+
+                <p className="text-danger">{formErrors.order_id?.message}</p>
             </form>
         </>
     );

@@ -40,15 +40,16 @@ const NewPizza = (props) => {
         pizzaSize: "",
         crust: "",
         sauce: "",
+        orderStatus: "pending",
         price: {
-            pizzaSize: 0,
-            crust: 0,
-            toppings: 0,
-            total: 0
+            pizzaSize: null,
+            crust: null,
+            sauce: null,
+            toppings: null,
+            total: null
         },
         toppings: [],
-        user_id: "",
-        order_id: ""
+        user_id: ""
     });
 
     // TOPPINGS CHECKBOX BOOLEANS
@@ -59,8 +60,8 @@ const NewPizza = (props) => {
     // USER AUTH for currently logged user
     // -----------------------------------------------------------------------------
     useEffect(()=>{
-        setLoggedUser(userAuth);
-        setToppingBooleans(PizzaService.toppingIsChecked(...formInfo.toppings))
+        userAuth();
+        setToppingBooleans(PizzaService.toppingIsChecked(formInfo.toppings))
     }, [])
 
 
@@ -129,12 +130,13 @@ const NewPizza = (props) => {
 
         setFormInfo({
             ...formInfo,
+            user_id: currentUser._id,
             price:{
                 ...formInfo.price,
                 total: PizzaService.sumTotalPrice(formInfo.price)
             }
         })
-        axios.post("http://localhost:8000/api/pizzas/new", formInfo)
+        axios.post("http://localhost:8000/api/pizzas", formInfo)
             .then((res)=>{
                 console.log("Response after axios put request: ", res);
                 if(res.data.error){
@@ -146,6 +148,7 @@ const NewPizza = (props) => {
                         size: "",
                         crust: "",
                         sauce: "",
+                        orderStatus: "pending",
                         toppings: [],
                         price: {
                             pizzaSize: null,
@@ -160,7 +163,7 @@ const NewPizza = (props) => {
                     // clear out any past error messages
                     setFormErrors({});
                     
-                    navigate("pizza-time/order-summary");
+                    navigate("/pizza-time/order-summary");
                     window.location.reload();
             }
             })
