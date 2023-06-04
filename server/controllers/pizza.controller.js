@@ -9,10 +9,10 @@ module.exports.sayHello = (req, res)=>{
 
 module.exports.findAllPizzas = (req, res) =>{
     Pizza.find()
-    .populate("crust")
-    .populate("size")
-    .populate("sauce")
-    .populate("toppings")
+    .populate("crust", ["_id", "name", "price"])
+    .populate("pizzaSize", ["_id", "name", "price"])
+    .populate("sauce", ["_id", "name", "price"])
+    .populate("toppings", ["_id", "name", "price"])
         .then(allPizzas=>{
             res.json({results: allPizzas})
         })
@@ -35,13 +35,31 @@ module.exports.createPizza = (req, res)=>{
 module.exports.findOnePizza = (req, res)=>{
     // req.body represents the form information
     Pizza.findOne({_id: req.params.id})
-    // .populate("crust")
-    // .populate("size")
-    // .populate("sauce")
-    // .populate("toppings")
+    .populate("crust", ["_id", "name", "price"])
+    .populate("pizzaSize", ["_id", "name", "price"])
+    .populate("sauce", ["_id", "name", "price"])
+    .populate("toppings", ["_id", "name", "price"])
     .populate("user_id")
         .then(foundPizza => {
             res.json({results: foundPizza})
+        })
+        .catch(err=> {
+            res.json({msg: "Something went wrong in the pizza controller: ", error: err})
+        })
+}
+
+
+module.exports.findPendingPizzas = (req, res)=>{
+    // req.body represents the form information
+    Pizza.find()
+    .where('orderStatus').equals("pending")
+    .populate("crust", ["_id", "name", "price"])
+    .populate("pizzaSize", ["_id", "name", "price"])
+    .populate("sauce", ["_id", "name", "price"])
+    .populate("toppings", ["_id", "name", "price"])
+    .populate("user_id", ["_id", "firstName", "lastName"])
+        .then(allPizzasInCart => {
+            res.json({results: allPizzasInCart})
         })
         .catch(err=> {
             res.json({msg: "Something went wrong in the pizza controller: ", error: err})

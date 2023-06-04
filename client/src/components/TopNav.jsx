@@ -52,15 +52,15 @@ const TopNav = (props) => {
                         <h2>Pizza time!</h2>
                         {isLogged ? (
                             <div className="" style={{gap: "40px"}}>
-                                <Link to="/dashboard">Dashboard</Link>
-                                <Link to="/order-summary">Order Summary</Link>
-                                <Link to="/account-info">Account Info</Link>
-                                <Link to="/logout">Logout</Link>
+                                <Link to="/pizza-time/dashboard">Dashboard</Link>
+                                <Link to="/pizza-time/order-summary">Order Summary</Link>
+                                <Link to="/pizza-time/account-info">Account Info</Link>
+                                <Link to="/pizza-time/logout">Logout</Link>
                             </div>
                             ) : (
                             <div className="">
-                                <Link to="/login">Login</Link>
-                                <Link to="/register">Register</Link>
+                                <Link to="/welcome/login">Login</Link>
+                                <Link to="/welcome/register">Register</Link>
                             </div>
                             )}
                 </div>

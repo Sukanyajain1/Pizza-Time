@@ -25,6 +25,10 @@ const PizzaSchema = new mongoose.Schema ({
         required: [true, "Pizza price is required."],
         min: [1, "Pizza price cannot be less than $1."]
     },
+    orderStatus: {
+        type: String,
+        required: [true, "Order status is required."]
+    },
     // add the user._id for the user that created this object
     user_id: {
         type: mongoose.Schema.Types.ObjectId, //this is my User Type

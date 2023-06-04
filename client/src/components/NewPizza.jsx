@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PizzaForm from './PizzaForm';
-import { useNavigate, useOutletContext, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import WithAuth from './WithAuth';
 
 
@@ -11,7 +11,6 @@ const NewPizza = ({currentUser, isLogged}) => {
     const navigate = useNavigate();
     const [formErrors, setFormErrors] = useState({});
 
-    // const [currentUser, isLogged] = useOutletContext();
 
 
     // formInfo will be filled with info about the pizza we want to update
@@ -20,6 +19,7 @@ const NewPizza = ({currentUser, isLogged}) => {
         crust: "",
         sauce: "",
         toppings: [],
+        orderStatus: "pending",
         price: 0,
         user_id: currentUser._id
     });
@@ -29,47 +29,9 @@ const NewPizza = ({currentUser, isLogged}) => {
     
     const [totalPrice, setTotalPrice] = useState({});
     
-    // -----------------------------------------------------------------------------
-    // USER AUTH for currently logged user
-    // -----------------------------------------------------------------------------
-    // useEffect(()=>{
-    //     // setAuthToggle(!authToggle) 
-    //     console.log("NEW PIZZA: ", currentUser)
-    //     if (isLogged){
-    //         setToppingBooleans(PizzaService.toppingIsChecked(formInfo.toppings))
-    //         console.log("SET TOPPING WAS ATTEMPTED")
-    //         console.log(toppingBooleans)
-    //     }
-
-    //     // const {pizzaSize, crust, toppings, sauce} = formInfo.price
-    //     // setFormInfo({
-    //     //     ...formInfo,
-    //     //     user_id: currentUser._id,
-    //     //     price:{
-    //     //         ...formInfo.price,
-    //     //         total: (pizzaSize*10 + crust*10 + toppings*10 + sauce*10) /10
-    //     //     }
-    //     // })
-    // }, [currentUser])
-
-    // const priceSetter = async()=>{
-    //     const totalPriceSetter = await (PizzaService.sumTotalPrice(formInfo.price))
-    //     return totalPriceSetter
-    // }
-
-    const priceSetter = ()=>{
-        // this will take the toppings list and reference it with the
-    }
 
     const submitHandler = (e)=>{
         e.preventDefault();
-        // const userId = {...currentUser._id}
-        const {pizzaSize, crust, toppings, sauce} = formInfo.price
-        setFormInfo({
-            ...formInfo,
-            user_id: currentUser._id,
-            price: (pizzaSize*10 + crust*10 + toppings*10 + sauce*10) /10
-            })
         
         axios.post("http://localhost:8000/api/pizzas", formInfo)
         .then((res)=>{
@@ -84,6 +46,7 @@ const NewPizza = ({currentUser, isLogged}) => {
                     crust: "",
                     sauce: "",
                     toppings: [],
+                    orderStatus: "",
                     price: 0,
                     user_id: ""
                 });
@@ -121,10 +84,29 @@ const NewPizza = ({currentUser, isLogged}) => {
                             currentUser={currentUser}>
                         </PizzaForm>
                     </div>
-                    {/* <div className="col" style={{width: "800px",}}>
+                    <div className="col" style={{width: "800px",}}>
                         <h1 className="">Total Price:</h1>
-                        <h1 className="">{pizzaTotal}</h1>
-                    </div> */}
+                        <h1 className="">{formInfo.price}</h1>
+                        <hr />
+                        <h5 className="">Pizza Size:</h5>
+                        <h5 className="">{formInfo.pizzaSize}</h5>
+                        <hr />
+                        <h5 className="">crust :</h5>
+                        <h5 className="">{formInfo.crust}</h5>
+                        <hr />
+                        <h5 className="">sauce :</h5>
+                        <h5 className="">{formInfo.sauce}</h5>
+                        <hr />
+                        <h5 className="">toppings :</h5>
+                        <h5 className="">{formInfo.toppings}</h5>
+                        <hr />
+                        <h5 className="">orderStatus :</h5>
+                        <h5 className="">{formInfo.orderStatus}</h5>
+                        <hr />
+                        <h5 className="">user_id :</h5>
+                        <h5 className="">{formInfo.user_id}</h5>
+                        <hr />
+                    </div>
                 </div>
             </div>:
                 <div>

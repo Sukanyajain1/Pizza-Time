@@ -22,6 +22,11 @@ const OrderSchema = new mongoose.Schema ({
     },
     isFavorite: {
         type: Boolean
+    },
+    totalAfterTax: {
+        type: Number,
+        required: [true, "Order total price is required."],
+        min: [12.99, "Order total cannot be less than price of the standard small pizza."]
     }
     }, {timestamps: true}
 );

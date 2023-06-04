@@ -26,6 +26,7 @@ require('./server/routes/sauce.routes')(app)
 require('./server/routes/topping.routes')(app)
 require('./server/routes/pizzaSize.routes')(app)
 require('./server/routes/crust.routes')(app)
+require('./server/routes/deliveryMethod.routes')(app)
 
 
 // start the server
