@@ -14,7 +14,7 @@ const submitUpdatePizza = (formInfo, _id)=>{
     axios.put(`http://localhost:8000/api/expenses/update/${_id}`, formInfo)
 }    
 
-const sumTotalPrice = (priceObj)=>{
+const sumTotalPrice = async (priceObj)=>{
     let {pizzaSize, crust, sauce, toppings, total} = priceObj
     total = (pizzaSize*10 + sauce*10 + toppings*10 + crust*10) /10
     return total

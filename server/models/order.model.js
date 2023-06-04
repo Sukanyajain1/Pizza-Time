@@ -5,35 +5,24 @@ const bcrypt = require('bcrypt');
 
 
 const OrderSchema = new mongoose.Schema ({
-    deliveryMethod: {
-        type: String,
-        required: [true, 'Delivery Method is required'],
-        enum: ['Carry Out', 'Home Delivery']
-    },
-    isFavorite: {
-        type: Boolean
-    },
-    totalBeforeTax: {
-        type: Number,
-        required: [true, 'Order Total is required'],
-        min: [0.01, 'Order cannot be $0. Please add a pizza to your order.']
-    },
-    totalAfterTax: {
-        type: Number,
-        required: [true, 'Order Total is required'],
-        min: [0.01, 'Order cannot be $0. Please add a pizza to your order.']
-    },
-
     // add the user._id for the user that created this object
     user_id: {
-        type: mongoose.Schema.Types.ObjectId, //this is my Order Type
-        ref: "Order" //this is the name of my Order Model from the order.model.js
+        type: mongoose.Schema.Types.ObjectId, //this is my User Type
+        ref: "User" //this is the name of my User Model from the user.model.js
     },
     // add the user._id for the user that created this object
     pizza_id: [{
         type: mongoose.Schema.Types.ObjectId, //this is my Pizza Type
         ref: "Pizza" //this is the name of my Pizza Model from the pizza.model.js
-    }]
+    }],
+    deliveryMethod: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: [true, 'Delivery Method is required'],
+        ref: 'DeliveryMethod'
+    },
+    isFavorite: {
+        type: Boolean
+    }
     }, {timestamps: true}
 );
 

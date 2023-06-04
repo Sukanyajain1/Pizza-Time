@@ -1,67 +1,78 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
+import axios from 'axios'
 import { useNavigate, Link, redirect } from 'react-router-dom';
-import UserService from '../services/user.service'
-import LoggedNav from './LoggedNav';
-import SigninNav from './SigninNav';
+
+import WithAuth from './WithAuth';
 
 
 const TopNav = (props) => {
 
     // const {currentUser, setCurrentUser} = props;
-    const {currentUser, isLoading, numInCart, isLogged} = props;
+    const {currentUser, numInCart, isLogged, handleLogout} = props;
 
-    // const [isSynced, setIsSynced] = useState(false);
-    // const [navContent, setNavContent] = useState();
-
-    // let navContent;
-    // const [isLogged, setIsLogged] = useState(false);
-    
-// NOTES:
-// keep redirect in the top nav --> it works so much better than navigate and doesn't throw loops
+    const navigate = useNavigate();
 
 
-    useEffect(()=>{             //PUT IT IN THE TOP NAV AND USE CHILDTOPARENT PROPS
-        // setAuthToggle(!authToggle)
-        if(!isLogged){
-            console.log("LOGGED USER INFO IN TOP NAV", currentUser)
-            
-        }else{
-            console.log("TopNav changed again");
-            console.log(currentUser);
-            // setIsSynced(true)
-        }
-    }, [currentUser])
-
-
-
-
-    if(isLoading){
-        return (
-            <h1>Loading...</h1>
-        )
+    const logout = ()=>{
+        axios.get("http://localhost:8000/api/users/logout", {withCredentials:true})
+            .then(res=>{
+                navigate("/login", { replace: true });
+            })
+            .catch(err=>{
+                console.log("errrr logging out", err)
+            })
     }
+    return (
+        <div>
+{/* 
+            <nav>
+                <div className="navbar-left">
+                    <h1>Pizza Time!</h1>
+                </div>
+                <div className="navbar-right">
+                    {isLogged ? (
+                    <>
+                        <Link to="/dashboard">Dashboard</Link>
+                        <Link to="/order-summary">Order Summary</Link>
+                        <Link to="/account-info">Account Info</Link>
+                        <button onClick={logout}>Logout</button>
+                    </>
+                    ) : (
+                    <>
+                        <Link to="/login">Login</Link>
+                        <Link to="/register">Register</Link>
+                    </>
+                    )}
+                </div>
+            </nav> */}
 
-    // if(isSynced){
-        return (
-            <div>
-                <nav className="navbar navbar-expand-lg navbar-light" style={{backgroundColor: "#e3f2fd"}}>
-                    <div className="container-fluid">
+            <nav className="navbar navbar-expand-lg navbar-light" style={{backgroundColor: "#e3f2fd"}}>
+                <div className="">
+                    <div className="d-flex justify-content-between container-fluid">
                         <h2>Pizza time!</h2>
-                        {isLogged?
-                            <LoggedNav currentUser={currentUser} numInCart={numInCart}/>
-                        :
-                            <SigninNav/>
-                        }
-                    </div>
-                </nav>
-            </div>
-        );
+                        {isLogged ? (
+                            <div className="" style={{gap: "40px"}}>
+                                <Link to="/dashboard">Dashboard</Link>
+                                <Link to="/order-summary">Order Summary</Link>
+                                <Link to="/account-info">Account Info</Link>
+                                <Link to="/logout">Logout</Link>
+                            </div>
+                            ) : (
+                            <div className="">
+                                <Link to="/login">Login</Link>
+                                <Link to="/register">Register</Link>
+                            </div>
+                            )}
+                </div>
+                </div>
+            </nav>
+        </div>
+    );
     // }
 };
 
 
-export default TopNav;
+export default WithAuth(TopNav);
 
 
 

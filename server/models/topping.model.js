@@ -19,7 +19,7 @@ const Topping = mongoose.model("Topping", ToppingSchema);
 
 module.exports = Topping;
 
-// initial() function helps us to create 2 important rows in Toppings collection (3 if you want to add a moderator Topping).
+// initial() function helps us to create important rows in Toppings collection.
 module.exports.initial=()=>{
     Topping.find({}).then((docs)=>{
         // console.log(docs, "this is docs");

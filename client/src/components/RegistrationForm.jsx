@@ -40,7 +40,7 @@ const RegistrationForm = () => {
                     setFormErrors(res.data.errors)
                 }else{
                     //redirect to dashboard
-                    navigate("pizza-tracker/dashboard");
+                    navigate("/dashboard");
                     window.location.reload();
                 }
             })

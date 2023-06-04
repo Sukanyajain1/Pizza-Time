@@ -52,7 +52,7 @@ class UserController {
         
     }
 
-    login = async(req, res) => {
+    login = async(req, res) => {            //trying  async/await
         const user = await User.findOne({ email: req.body.email }); //see if the user exists in db
 
         if(user === null) {

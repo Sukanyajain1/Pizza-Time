@@ -1,12 +1,12 @@
 import React, {useEffect, useState, useParams} from 'react';
 import axios from 'axios';
-
+import WithAuth from './WithAuth';
 import { useNavigate, Link } from "react-router-dom";
 
 
 const OrderSummary = (props) => {
 
-    const {userAuth, currentUser, numInCart, setNumInCart} = props;
+    const {currentUser, numInCart, setNumInCart} = props;
     const [loggedUser, setLoggedUser] = useState();
     const navigate = useNavigate();
     const {_id} = useParams();
@@ -25,71 +25,50 @@ const OrderSummary = (props) => {
     });
     const [formErrors, setFormErrors] = useState({});
 
-    // this will be the list of all the pizzas created and lined up before purchase
-    // the total order price will be calculated by summing all of the pizza prices before tax and delivery
-    // the delivery method is an attribute of the ORDER MODEL even though it is in the pizza form
+
+    // useEffect(()=>{
+    //     setLoggedUser(userAuth);
+    //     if(!loggedUser.firstName){
+    //         console.log("LOGGED USER INFO", loggedUser)
+    //         navigate("welcome/login");
+    //         window.location.reload();
+    //     }else{
+    //         console.log("verified the logged user again")
+    //         axios.get(`http://localhost:8000/api/pizzas/show_in_cart/${_id}`)
+    //             .then((res)=>{
+    //                 console.log("This is the api result: ", res);
+    //                 setCurrentPizzasList(res.data.results);
+    //                 setNumInCart(currentPizzasList.length)
+    //             })
+    //             .catch(err=>{
+    //                 console.log("Axios error: ", err);
+    //             });
+
+    //         axios.get(`http://localhost:8000/api/deliveryMethods`)
+    //             .then((res)=>{
+    //                 console.log("This is the api result: ", res);
+    //                 setDeliveryMethodsList(res.data.results)
+    //             })
+    //             .catch(err=>{
+    //                 console.log("Axios error: ", err);
+    //             });
+    //     }
+    // }, [])
 
 
-    useEffect(()=>{
-        setLoggedUser(userAuth);
-        if(!loggedUser.firstName){
-            console.log("LOGGED USER INFO", loggedUser)
-            navigate("welcome/login");
-            window.location.reload();
-        }else{
-            console.log("verified the logged user again")
-            axios.get(`http://localhost:8000/api/pizzas/show_in_cart/${_id}`)
-                .then((res)=>{
-                    console.log("This is the api result: ", res);
-                    setCurrentPizzasList(res.data.results);
-                    setNumInCart(currentPizzasList.length)
-                })
-                .catch(err=>{
-                    console.log("Axios error: ", err);
-                });
 
-            axios.get(`http://localhost:8000/api/deliveryMethods`)
-                .then((res)=>{
-                    console.log("This is the api result: ", res);
-                    setDeliveryMethodsList(res.data.results)
-                })
-                .catch(err=>{
-                    console.log("Axios error: ", err);
-                });
-        }
-    }, [])
+    // const changeHandler = (e)=>{
+    //     setFormInfo(
+    //         ...formInfo,
+    //         {deliveryMethod: e.target.value}
+    //     )
+    //     setDeliveryFee(e.target.id)
+    //     orderPriceHandler(deliveryFee);
+    // }
 
-
-    const orderPriceHandler = (fee)=>{
-        let sumBeforeTax = null;
-        let sumAfterTax = null;
-
-        currentPizzasList.map((pizzaObj)=>{
-            sumBeforeTax += pizzaObj.price;
-            return sumBeforeTax;
-        })
-        sumBeforeTax += fee;
-        sumAfterTax += (sumBeforeTax * 1.0875);
-        setFormInfo(
-            ...formInfo,
-            {totalBeforeTax: sumBeforeTax},
-            {totalAfterTax: sumAfterTax}
-        )
-    }
-
-
-    const changeHandler = (e)=>{
-        setFormInfo(
-            ...formInfo,
-            {deliveryMethod: e.target.value}
-        )
-        setDeliveryFee(e.target.id)
-        orderPriceHandler(deliveryFee);
-    }
-
-    const purchaseHandler = ()=>{
+    // const purchaseHandler = ()=>{
         
-    }
+    // }
 
     return (
         <>
@@ -133,13 +112,13 @@ const OrderSummary = (props) => {
                     <h3 className="float-end">TOTAL:  ${formInfo.totalAfterTax}</h3>
                     <div className="d-flex justify-between">
                         <Link to="/pizza-time/pizza/new" className="btn btn-warning border-dark">Add New Pizzas</Link>
-                        <button className="btn-success border-dark" onClick={purchaseHandler}>PURCHASE</button>
+                        <button className="btn-success border-dark" onClick="">PURCHASE</button>
                     </div>
                 </div>
                 <div className="col">
                     <div className="form-group">
                         <label htmlFor="">DELIVERY METHOD:</label>
-                        <select class="form-select" aria-label="Default select example" name="deliveryMethod" value={formInfo.deliveryMethod} onChange={changeHandler}>
+                        <select class="form-select" aria-label="Default select example" name="deliveryMethod" value={formInfo.deliveryMethod} onChange="">
                             <option selected>Choose a delivery option</option>
                             {
                                 deliveryMethodsList.map((methodObj, idx)=>{
@@ -164,4 +143,4 @@ const OrderSummary = (props) => {
     );
 }
 
-export default OrderSummary;
+export default WithAuth(OrderSummary);

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import PizzaForm from './PizzaForm';
 import axios from "axios";
 import PizzaService from '../services/pizza.service'
+import WithAuth from './WithAuth';
 
 
 
@@ -179,4 +180,4 @@ const EditExpense = (props) => {
     );
 }
 
-export default EditExpense;
+export default WithAuth(EditExpense);

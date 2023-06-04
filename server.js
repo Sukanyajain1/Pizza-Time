@@ -7,17 +7,18 @@ const cookieParser = require('cookie-parser'); //so that the server can understa
 const app = express(); 
 const port = 8000;
 
+// middleware
 app.use(express.json())
 app.use(express.urlencoded({extended:true})) 
 app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(cookieParser());
 
 
-
+// connecting to mongoDB
 require("./server/config/mongoose.config")
 
 
-
+// routes
 require('./server/routes/user.routes')(app)
 require('./server/routes/pizza.routes')(app)
 require('./server/routes/order.routes')(app)
@@ -27,5 +28,5 @@ require('./server/routes/pizzaSize.routes')(app)
 require('./server/routes/crust.routes')(app)
 
 
-
+// start the server
 app.listen( port, () => console.log(`Listening on port: ${port}`) );

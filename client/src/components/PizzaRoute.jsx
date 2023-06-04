@@ -8,11 +8,11 @@ import { useNavigate, Outlet, useOutletContext } from "react-router-dom";
 
 
 const PizzaRoute = () => {
-    const [currentUser, componentDidMount, isLogged] = useOutletContext();
+    const [currentUser, authToggle, setAuthToggle, isLoading, isLogged] = useOutletContext();
 
     return (
         <>
-            <Outlet context={[currentUser, componentDidMount, isLogged]}/>
+            <Outlet context={[currentUser, authToggle, setAuthToggle, isLoading, isLogged]}/>
         </>
     );
 }

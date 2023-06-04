@@ -9,6 +9,10 @@ module.exports.sayHello = (req, res)=>{
 
 module.exports.findAllPizzas = (req, res) =>{
     Pizza.find()
+    .populate("crust")
+    .populate("size")
+    .populate("sauce")
+    .populate("toppings")
         .then(allPizzas=>{
             res.json({results: allPizzas})
         })
@@ -24,13 +28,18 @@ module.exports.createPizza = (req, res)=>{
             res.json({results: newCreatedPizza})
         })
         .catch(err=> {
-            res.json({msg: "Something went wrong in the pizza controller: ", error: err})
+            res.json({msg: "Something went wrong in the pizza controller create function: ", error: err})
         })
 }
 
 module.exports.findOnePizza = (req, res)=>{
     // req.body represents the form information
     Pizza.findOne({_id: req.params.id})
+    // .populate("crust")
+    // .populate("size")
+    // .populate("sauce")
+    // .populate("toppings")
+    .populate("user_id")
         .then(foundPizza => {
             res.json({results: foundPizza})
         })
@@ -67,6 +76,10 @@ module.exports.deletePizza = (req, res)=>{
 
 module.exports.findRandomPizza = (req, res) =>{
     Pizza.find()
+    .populate("crust")
+    .populate("size")
+    .populate("sauce")
+    .populate("toppings")
         .then(allPizzas=>{
             // get a random index number from index 0 up to but not including the allPizzas.length
             let randomIdx = Math.floor(Math.random()*allPizzas.length)
