@@ -7,11 +7,11 @@ import { useNavigate, Link, useOutletContext } from 'react-router-dom';
 const NewPizza = () => {
     // , allDBSauces, allDBToppings, allDBCrusts, allDBPieSizes
     
-    const [currentUser, isLogged] = useOutletContext();
-    const [allDBSauces, setAllDBSauces] = useState([]);
-    const [allDBToppings, setAllDBToppings] = useState([]);
-    const [allDBCrusts, setAllDBCrusts] = useState([]);
-    const [allDBPieSizes, setAllDBPieSizes] = useState([]);
+    const [currentUser, isLogged, allDBSauces, allDBToppings, allDBCrusts, allDBPieSizes] = useOutletContext();
+    // const [allDBSauces, setAllDBSauces] = useState([]);
+    // const [allDBToppings, setAllDBToppings] = useState([]);
+    // const [allDBCrusts, setAllDBCrusts] = useState([]);
+    // const [allDBPieSizes, setAllDBPieSizes] = useState([]);
     
     const navigate = useNavigate();
     const [formErrors, setFormErrors] = useState({});
@@ -91,10 +91,10 @@ const NewPizza = () => {
                             allDBCrusts={allDBCrusts}
                             allDBPieSizes={allDBPieSizes}
 
-                            setAllDBSauces={setAllDBSauces}
-                            setAllDBToppings={setAllDBToppings}
-                            setAllDBCrusts={setAllDBCrusts}
-                            setAllDBPieSizes={setAllDBPieSizes}
+                            // setAllDBSauces={setAllDBSauces}
+                            // setAllDBToppings={setAllDBToppings}
+                            // setAllDBCrusts={setAllDBCrusts}
+                            // setAllDBPieSizes={setAllDBPieSizes}
 
                             formErrors={formErrors}
                             buttonValue = "ADD TO ORDER">

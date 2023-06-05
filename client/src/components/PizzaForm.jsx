@@ -212,13 +212,13 @@ const PizzaForm = (props) => {
                             key={idx}
                             style={{margin: "20px", gap: "10px"}}>
                                 {/* <p className='text-success'>{toppingObj.checkedKey}</p> */}
-                                <span className="align-middle" htmlFor="">{toppingObj.name}</span>
+                                <span className="align-middle" htmlFor="">{toppingObj.name} - {idx}</span>
                                 <input
                                     type="checkbox"
                                     name="toppings"
                                     data-id={toppingObj._id}
                                     onChange={functionNumber2_FINALBOSS}
-                                    checked={formInfo.toppings.includes(toppingObj._id)?.checked}
+                                    checked={formInfo.toppings.includes(toppingObj._id)?true: false}
                                     className="form-check-input" />
                             </div>
                         )
@@ -230,6 +230,9 @@ const PizzaForm = (props) => {
 
                 <p className="text-danger">{formErrors.order_id?.message}</p>
             </form>
+
+            <h1>{formInfo.toppings}</h1>
+            {console.log("THIS IS THE FORM TOPPINGS: ", formInfo.toppings)}
         </>
     );
 }
