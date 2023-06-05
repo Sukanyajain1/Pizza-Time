@@ -34,12 +34,12 @@ module.exports.createPizza = (req, res)=>{
 
 module.exports.findOnePizza = (req, res)=>{
     // req.body represents the form information
-    Pizza.findOne({_id: req.params.id})
-    .populate("crust", ["_id", "name", "price"])
-    .populate("pizzaSize", ["_id", "name", "price"])
-    .populate("sauce", ["_id", "name", "price"])
-    .populate("toppings", ["_id", "name", "price"])
-    .populate("user_id")
+    Pizza.findById({_id: req.params.id})
+    // .populate("crust", ["_id", "name", "price"])
+    // .populate("pizzaSize", ["_id", "name", "price"])
+    // .populate("sauce", ["_id", "name", "price"])
+    // .populate("toppings", ["_id", "name", "price"])
+    // .populate("user_id")
         .then(foundPizza => {
             res.json({results: foundPizza})
         })

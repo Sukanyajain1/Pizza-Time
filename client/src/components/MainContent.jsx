@@ -1,9 +1,10 @@
 import React from 'react';
 
 import { Outlet } from "react-router-dom";
+import WithAuth from './WithAuth';
 
 
-const MainContent = ({currentUser, authToggle, setAuthToggle, isLoading, isLogged}) => {
+const MainContent = ({currentUser, isLogged}) => {
     // authToggle, setAuthToggle
     // context={[loggedUser]}
 
@@ -11,9 +12,9 @@ const MainContent = ({currentUser, authToggle, setAuthToggle, isLoading, isLogge
         <>
             {/* <h1>hello all</h1>
             <h3>{currentUser.firstName}</h3> */}
-            <Outlet context={[currentUser, authToggle, setAuthToggle, isLoading, isLogged]}/>
+            <Outlet context={[currentUser, isLogged]}/>
         </>
     );
 }
 
-export default MainContent;
+export default WithAuth(MainContent);

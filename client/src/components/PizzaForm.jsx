@@ -6,54 +6,65 @@ import axios from "axios";
 const PizzaForm = (props) => {
     const {
         submitHandler,
-        // changeHandler,
         formInfo, setFormInfo,
-        // formToppings, setFormToppings,
-        totalPrice, setTotalPrice,
-        toppingBooleans, setToppingBooleans,
-        // priceBreakdown, setPriceBreakdown,
+        basePrices, setBasePrices,
+        // priceSetter,
+
         formErrors,
         buttonValue,
-        currentUser
 
+        allDBSauces,
+        allDBToppings,
+        allDBCrusts,
+        allDBPieSizes,
+
+
+
+        // setAllDBSauces,
+        // setAllDBToppings,
+        // setAllDBCrusts,
+        // setAllDBPieSizes
     } = props;
     
-    const {pizzaSize: formPieSize, sauce: formSauce, crust: formCrust, toppings: formToppings} = formInfo;
-    const [allDBSauces, setAllDBSauces] = useState([]);
-    const [allDBToppings, setAllDBToppings] = useState([]);
-    const [allDBCrusts, setAllDBCrusts] = useState([]);
-    const [allDBPieSizes, setAllDBPieSizes] = useState([]);
 
-    const [basePrices, setbasePrices] = useState({
-        pizzaSize: 0,
-        crust: 0,
-        sauce: 0,
-        toppings: 0
-    });
+
+
 
     const BASE_URL = 'http://localhost:8000/api';
 
 
-    useEffect(() => {
-        const fetchIngredients = async () => {
-            try {
-                const sizeResponse = await axios.get(`${BASE_URL}/pizzaSizes`);
-                const crustResponse = await axios.get(`${BASE_URL}/crusts`);
-                const sauceResponse = await axios.get(`${BASE_URL}/sauces`);
-                const toppingsResponse = await axios.get(`${BASE_URL}/toppings`);
-        
-                setAllDBPieSizes(sizeResponse.data.results);
-                setAllDBCrusts(crustResponse.data.results);
-                setAllDBSauces(sauceResponse.data.results);
-                setAllDBToppings(toppingsResponse.data.results);
 
-            } catch (error) {
-                console.error('Error fetching ingredients:', error);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchIngredients = async () => {
+    //         try {
+    //             const sizeResponse = await axios.get(`${BASE_URL}/pizzaSizes`);
+    //             const crustResponse = await axios.get(`${BASE_URL}/crusts`);
+    //             const sauceResponse = await axios.get(`${BASE_URL}/sauces`);
+    //             const toppingsResponse = await axios.get(`${BASE_URL}/toppings`);
+        
+    //             setAllDBPieSizes(sizeResponse.data.results);
+    //             setAllDBCrusts(crustResponse.data.results);
+    //             setAllDBSauces(sauceResponse.data.results);
+    //             setAllDBToppings(toppingsResponse.data.results);
+
+    //             // priceSetter(formInfo)
+
+    //             console.log("ENDING THE FETCH FUNCTION INSIDE PIZZA FORM")
+
+    //         } catch (error) {
+    //             console.error('Error fetching ingredients:', error);
+    //         }
+    //     };
     
-        fetchIngredients();
-    }, []);
+    //     fetchIngredients();
+    //     console.log("OUTSIDE THE FETCH FUNCTION IN THE PIZZA FORM")
+    //     // priceSetter()
+    // }, []);
+// there will be a change handler that only triggers a useEffect function
+// the useEffect function will perform the change handler
+// this will be because the change handler will set the base prices for the pizza and change the form info accordingly---> NOT
+// each pizza component will have their own inital formInfo and basePrices state variables that are initialized differently.
+// the pizza route will house the axios calls for all ingredients
 
 
 // function that returns an object with the new form information in a const variable
@@ -61,7 +72,8 @@ const PizzaForm = (props) => {
         // this function will return a const variable containing the new formInfo object (not the state variable, but a new object that contains all the new info for it)
         const {pizzaSize: a, crust: b, sauce: c, toppings: d} = formInfo
         const {pizzaSize: w, crust: x, sauce: y, toppings: z} = basePrices
-        
+        console.log("THESE ARE THE BASE PRICES: ", basePrices)
+
         let newFormInfo = {
             pizzaSize: a,
             crust: b,
@@ -79,7 +91,7 @@ const PizzaForm = (props) => {
             const eventPrice = Number(document.querySelector(`option[value="${e.target.value}"]`).dataset.price)
             newFormInfo[e.target.name] = e.target.value
             newFormInfo.priceBreakdown[e.target.name]= eventPrice
-            setbasePrices({
+            setBasePrices({
                 ...basePrices,
                 [e.target.name]: eventPrice
             })
@@ -97,12 +109,12 @@ const PizzaForm = (props) => {
 
             //caluclate the price of the toppings list
             let newToppingPrice = allDBToppings.reduce((total, topping) =>
-                total + (newFormInfo["toppings"].includes(topping._id)? topping.price : 0),
+                total + (newFormInfo["toppings"].includes(topping._id)? Number(topping.price) : 0),
                 0
             );
             newFormInfo.priceBreakdown[e.target.name] = newToppingPrice;
 
-            setbasePrices({
+            setBasePrices({
                 ...basePrices,
                 [e.target.name]: newToppingPrice
             })
@@ -114,13 +126,14 @@ const PizzaForm = (props) => {
     const functionNumber2_FINALBOSS = (e)=>{
         const newFormInfo = functionNumber1_NEWFORM_OBJ(e)
         const {pizzaSize, crust, sauce, toppings, priceBreakdown} = newFormInfo
+
         setFormInfo({
             ...formInfo,
             pizzaSize: pizzaSize,
             crust: crust,
             sauce: sauce,
             toppings: toppings,
-            price: (priceBreakdown.pizzaSize + priceBreakdown.crust + priceBreakdown.sauce + priceBreakdown.toppings)
+            price: priceBreakdown.pizzaSize + priceBreakdown.crust + priceBreakdown.sauce + priceBreakdown.toppings
         })
         console.log("THIS IS THE NEW FORM INFO: ", formInfo)
 
@@ -129,19 +142,20 @@ const PizzaForm = (props) => {
 
     return (
         <>
+        {console.log("THIS IS THE PIZZA FORM RENDER")}
             <div className="row">
                 <div className="col">
                     <h2 className="float-center">CRAFT-A-PIZZA</h2>
                 </div>
                 <div className="col">
-                    <h3>Total Price $ {formInfo.price}</h3>
+                    {/* <h3>Total Price $ {formInfo.price}</h3> */}
                 </div>
             </div>
             {/* <h3>The console logger: {formInfo.toppings}</h3> */}
             <form onSubmit={submitHandler} action="" className="">
                 <div className="form-group">
                     <label htmlFor="">Size: </label>
-                    <select onChange= {functionNumber2_FINALBOSS} name="pizzaSize" value={formPieSize} className="form-select">
+                    <select onChange= {functionNumber2_FINALBOSS} name="pizzaSize" value={formInfo.pizzaSize} className="form-select">
                         <option value=""disabled>Select a pie size!</option>
                         {
                             allDBPieSizes.map((sizeObj, idx)=>{
@@ -155,7 +169,7 @@ const PizzaForm = (props) => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="">Crust:</label>
-                    <select onChange= {functionNumber2_FINALBOSS} name="crust" value={formCrust} className="form-select">
+                    <select onChange= {functionNumber2_FINALBOSS} name="crust" value={formInfo.crust} className="form-select">
                         <option value=""disabled>Select a crust!</option>
                         {
                             allDBCrusts.map((crustObj, idx)=>{
@@ -169,7 +183,7 @@ const PizzaForm = (props) => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="">Sauce:</label>
-                    <select onChange= {functionNumber2_FINALBOSS} name="sauce" value={formSauce} className="form-select">
+                    <select onChange= {functionNumber2_FINALBOSS} name="sauce" value={formInfo.sauce} className="form-select">
                         <option value=""disabled>Select a sauce!</option>
                         {
                             allDBSauces.map((sauceObj, idx)=>{
@@ -204,7 +218,7 @@ const PizzaForm = (props) => {
                                     name="toppings"
                                     data-id={toppingObj._id}
                                     onChange={functionNumber2_FINALBOSS}
-                                    checked={formToppings[idx]?.checked}
+                                    checked={formInfo.toppings.includes(toppingObj._id)?.checked}
                                     className="form-check-input" />
                             </div>
                         )

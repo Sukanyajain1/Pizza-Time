@@ -21,7 +21,8 @@ const OrderSchema = new mongoose.Schema ({
         ref: 'DeliveryMethod'
     },
     isFavorite: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     totalAfterTax: {
         type: Number,

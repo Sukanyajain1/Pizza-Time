@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import WithAuth from './WithAuth';
 import { useNavigate, useOutletContext, Link } from "react-router-dom";
 
-const Dashboard = ({currentUser, isLogged}) => {
+const Dashboard = () => {
 
     // const navigate = useNavigate();
     // const [loggedUser, setLoggedUser] = useState({});
     // const {currentUser} = props;
-    // const [currentUser, isLogged] = useOutletContext();
+    const [currentUser, isLogged] = useOutletContext();
 
     useEffect(()=>{
         // setAuthToggle(!authToggle) 
@@ -27,7 +26,7 @@ const Dashboard = ({currentUser, isLogged}) => {
             <div>
                 {/* {console.log("THIS IS THE CURRENT USER", currentUser)} */}
                 <h1>Welcome {currentUser.firstName}, you're in the dashboard! Congrats on being a registered user!</h1>
-                <Link to={"/pizza-time/new-pizza"} className="nav-link">Add a Pizza to your order</Link>
+                <Link to={"/pizza-time/pizza/new-pizza"} className="nav-link">Add a Pizza to your order</Link>
             </div>
             : <div>
                 <h1>Sorry! Seems like you're not logged in yet! Dashboard</h1>
@@ -39,5 +38,5 @@ const Dashboard = ({currentUser, isLogged}) => {
 };
 
 
-export default WithAuth(Dashboard);
+export default Dashboard;
 

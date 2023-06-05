@@ -18,13 +18,15 @@ import SignIn from  './components/SignIn'
 import MainContent from './components/MainContent'
 import WithAuth from './components/WithAuth';
 import AccountInfo from './components/AccountInfo'
+import PizzaRoute from './components/PizzaRoute';
 
 // all wrapped components-- HOC workaround
-const DashWithAuth = WithAuth(Dashboard);
+const MainContentWithAuth = WithAuth(MainContent);        //custom HOC
+// const DashWithAuth = WithAuth(Dashboard);
 const NavWithAuth = WithAuth(TopNav);
-const NewPizzaWithAuth = WithAuth(NewPizza);
-const EditPizzaWithAuth = WithAuth(EditPizza);
-const OrderSumWithAuth = WithAuth(OrderSummary);
+// const NewPizzaWithAuth = WithAuth(NewPizza);
+// const EditPizzaWithAuth = WithAuth(EditPizza);
+// const OrderSumWithAuth = WithAuth(OrderSummary);
 
 
 
@@ -57,12 +59,14 @@ function App() {
               <Route path="login" element={<LoginForm/>} />
               <Route path="register" element={<RegistrationForm/>} />
             </Route>
-            <Route path = "pizza-time" element= {<MainContent/>}>
-              <Route path = "dashboard" element={<DashWithAuth/>}/>
-              <Route path = "order-summary" element={<OrderSumWithAuth/>}/>
-              <Route path="new-pizza" element={<NewPizzaWithAuth/>}/>
-              <Route path = "edit-pizza/:id" element={<EditPizzaWithAuth/>}/>
+            <Route path = "pizza-time" element= {<MainContentWithAuth/>}>
+              <Route path = "dashboard" element={<Dashboard/>}/>
+              <Route path = "order-summary" element={<OrderSummary/>}/>
+              <Route path = "pizza" element= {<PizzaRoute/>}>
+                <Route path="new" element={<NewPizza/>}/>
+                <Route path = "edit/:_id" element={<EditPizza/>}/>
               </Route>
+            </Route>
           </Routes>
         </div>
       </div>

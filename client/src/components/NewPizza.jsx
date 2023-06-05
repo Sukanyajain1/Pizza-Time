@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PizzaForm from './PizzaForm';
-import { useNavigate, Link } from 'react-router-dom';
-import WithAuth from './WithAuth';
+import { useNavigate, Link, useOutletContext } from 'react-router-dom';
 
 
-const NewPizza = ({currentUser, isLogged}) => {
+const NewPizza = () => {
+    // , allDBSauces, allDBToppings, allDBCrusts, allDBPieSizes
     
-
+    const [currentUser, isLogged] = useOutletContext();
+    const [allDBSauces, setAllDBSauces] = useState([]);
+    const [allDBToppings, setAllDBToppings] = useState([]);
+    const [allDBCrusts, setAllDBCrusts] = useState([]);
+    const [allDBPieSizes, setAllDBPieSizes] = useState([]);
+    
     const navigate = useNavigate();
     const [formErrors, setFormErrors] = useState({});
-
+    // const _id = null
 
 
     // formInfo will be filled with info about the pizza we want to update
@@ -23,11 +28,14 @@ const NewPizza = ({currentUser, isLogged}) => {
         price: 0,
         user_id: currentUser._id
     });
-
-    // TOPPINGS CHECKBOX BOOLEANS
-    const [toppingBooleans, setToppingBooleans] = useState({});
     
-    const [totalPrice, setTotalPrice] = useState({});
+    // const [totalPrice, setTotalPrice] = useState({});
+    const [basePrices, setBasePrices] = useState({
+        pizzaSize: 0,
+        crust: 0,
+        sauce: 0,
+        toppings: 0
+    });
     
 
     const submitHandler = (e)=>{
@@ -75,37 +83,27 @@ const NewPizza = ({currentUser, isLogged}) => {
                             submitHandler={submitHandler}
                             formInfo={formInfo}
                             setFormInfo={setFormInfo}
-                            totalPrice={totalPrice}
-                            setTotalPrice={setTotalPrice}
-                            toppingBooleans={toppingBooleans}
-                            setToppingBooleans={setToppingBooleans}
+                            basePrices={basePrices}
+                            setBasePrices={setBasePrices}
+
+                            allDBSauces={allDBSauces}
+                            allDBToppings={allDBToppings}
+                            allDBCrusts={allDBCrusts}
+                            allDBPieSizes={allDBPieSizes}
+
+                            setAllDBSauces={setAllDBSauces}
+                            setAllDBToppings={setAllDBToppings}
+                            setAllDBCrusts={setAllDBCrusts}
+                            setAllDBPieSizes={setAllDBPieSizes}
+
                             formErrors={formErrors}
-                            buttonValue = "ADD TO ORDER"
-                            currentUser={currentUser}>
+                            buttonValue = "ADD TO ORDER">
                         </PizzaForm>
                     </div>
+
                     <div className="col" style={{width: "800px",}}>
                         <h1 className="">Total Price:</h1>
                         <h1 className="">{formInfo.price}</h1>
-                        <hr />
-                        <h5 className="">Pizza Size:</h5>
-                        <h5 className="">{formInfo.pizzaSize}</h5>
-                        <hr />
-                        <h5 className="">crust :</h5>
-                        <h5 className="">{formInfo.crust}</h5>
-                        <hr />
-                        <h5 className="">sauce :</h5>
-                        <h5 className="">{formInfo.sauce}</h5>
-                        <hr />
-                        <h5 className="">toppings :</h5>
-                        <h5 className="">{formInfo.toppings}</h5>
-                        <hr />
-                        <h5 className="">orderStatus :</h5>
-                        <h5 className="">{formInfo.orderStatus}</h5>
-                        <hr />
-                        <h5 className="">user_id :</h5>
-                        <h5 className="">{formInfo.user_id}</h5>
-                        <hr />
                     </div>
                 </div>
             </div>:
@@ -118,4 +116,4 @@ const NewPizza = ({currentUser, isLogged}) => {
     );
 }
 
-export default WithAuth(NewPizza);
+export default NewPizza;

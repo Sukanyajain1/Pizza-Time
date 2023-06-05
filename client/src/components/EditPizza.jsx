@@ -1,183 +1,188 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useOutletContext } from 'react-router-dom';
 import PizzaForm from './PizzaForm';
 import axios from "axios";
-import PizzaService from '../services/pizza.service'
-import WithAuth from './WithAuth';
 
 
 
 
-const EditExpense = (props) => {
+const EditExpense = () => {
 
-    const {userAuth, currentUser, numInCart, setNumInCart} = props;
-    const [loggedUser, setLoggedUser] = useState();
+// , allDBSauces, allDBToppings, allDBCrusts, allDBPieSizes
+
+    const [currentUser, isLogged, allDBSauces, allDBToppings, allDBCrusts, allDBPieSizes] = useOutletContext();
     const navigate = useNavigate();
     const [formErrors, setFormErrors] = useState({});
+    const [isFetched, setIsFetched] = useState(false);
     const {_id} = useParams();
+
+    // const [allDBSauces, setAllDBSauces] = useState([]);
     // const [allDBToppings, setAllDBToppings] = useState([]);
     // const [allDBCrusts, setAllDBCrusts] = useState([]);
     // const [allDBPieSizes, setAllDBPieSizes] = useState([]);
 
     // formInfo will be filled with info about the ninja we want to update
     const [formInfo, setFormInfo] = useState({});
+    const [basePrices, setBasePrices] = useState({});
+    const BASE_URL = 'http://localhost:8000/api';
 
-    // TOPPINGS CHECKBOX BOOLEANS
-    const [toppingBooleans, setToppingBooleans] = useState({});
+    const priceSetter = (formData)=>{
+        // this function will return an object of base prices to set in the state variable 
+        let newPrices = {
+            pizzaSize: 0,
+            crust: 0,
+            sauce: 0,
+            toppings: 0
+        }
+        console.log("STARTING THE PRICE SETTER")
+        // let newSize = 0;
+        // let newCrust = 0;
+        // let newSauce = 0;
+        // let newToppings = 0;
+        // =====================================================================================
+        // PIZZA SIZE
+        // =====================================================================================
+        allDBPieSizes.map((sizeObj)=>{
+            sizeObj._id===formData.pizzaSize?
+            newPrices.pizzaSize = sizeObj.price :
+            console.log("size price was not: ", sizeObj.price)
+        })
+        // =====================================================================================
+        // CRUST
+        // =====================================================================================
+        allDBCrusts.map((crustObj)=>{
+            crustObj._id===formData.crust?
+            newPrices.crust = crustObj.price :
+            console.log("crust price was not: ", crustObj.price)
+        })
+        // =====================================================================================
+        // SAUCE
+        // =====================================================================================
+        allDBSauces.map((sauceObj)=>{
+            sauceObj._id===formData.sauce?
+            newPrices.sauce = sauceObj.price :
+            console.log("sauce price was not: ", sauceObj.price)
+        })
+        // =====================================================================================
+        // TOPPINGS
+        // =====================================================================================
+        // allDBToppings.map((toppingObj)=>{
+        //     toppingObj._id===formData.topping?
+        //     newPrices.toppings = toppingObj.price.toFixed(2) :
+        //     console.log("topping price was not: ", toppingObj.price)
+        // })
+        // const middleVal = (formData.price - newPrices.pizzaSize - newPrices.crust - newPrices.sauce - newPrices.toppings)
+        newPrices.toppings = Number(formData.price - newPrices.pizzaSize - newPrices.crust - newPrices.sauce - newPrices.toppings)
+        
 
-    // // Pizza Price Breakdown
-    // const [priceBreakdown, setPriceBreakdown] = useState({
-    //     pizzaSize: null,
-    //     crust: null,
-    //     quantity: null,
-    //     toppings: null
-    // });
+        // newPrices.pizzaSize
+        // newPrices.crust
+        // newPrices.sauce
+        // newPrices.toppings
+        // setBasePrices({
+        //     ...basePrices,
+        //     pizzaSize: newPrices.size,
+        //     crust: newPrices.crust,
+        //     sauce: newPrices.sauce,
+        //     toppings: newPrices.toppings,
+        // })
 
-    // const sizePriceSetter = ()=>{
-    //     allDBPieSizes.map((sizeObj)=>{
-    //         formInfo.pizzaSize===sizeObj.name?
-    //         setPriceBreakdown(...priceBreakdown, {pizzaSize: sizeObj.price}):
-    //         console.log(`Pizza is not a ${sizeObj.name}`)
-    //         return console.log("size price set successfully")
-    //     });
-    // }
+        console.log("THIS IS THE NEW SIZE PRICE: ", newPrices.pizzaSize);
+        console.log("THIS IS THE NEW CRUST PRICE: ", newPrices.crust);
+        console.log("THIS IS THE NEW SAUCE PRICE: ", newPrices.sauce);
+        console.log("THIS IS THE NEW TOPPINGS PRICE: ", newPrices.toppings);
+        // console.log("DB toppings list: ", allDBToppings);
 
-    // const crustPriceSetter = ()=>{
-    //     allDBCrusts.map((crustObj)=>{
-    //         formInfo.crust===crustObj.name?
-    //         setPriceBreakdown(
-    //             ...priceBreakdown,
-    //             {crust: crustObj.price}
-    //         ):
-    //         console.log(`Crust is not ${crustObj.name}`)
-    //         return console.log("crust price set successfully")
-    //     });
-    // }
+        return newPrices
 
-    // const toppingPriceSetter = ()=>{
-    //     let sumOfToppingPrices= 0;
-    //     allDBToppings.map((toppingObj)=>{
-    //         if (formInfo.toppings.includes(toppingObj.name)){
-    //             sumOfToppingPrices += toppingObj.price;
-    //         }else{
-    //             console.log(`topping is not present: ${toppingObj.name}`)
-    //         }
-    //         return console.log("toppings price set successfully")
-    //     });
-    //     setPriceBreakdown(
-    //         ...priceBreakdown,
-    //         {toppings: sumOfToppingPrices}
-    //     )
-    // }
+    }
+
 
 
     useEffect(() => {
-        setLoggedUser(userAuth);
 
-        PizzaService.getOnePizza(_id)
-            .then((res)=>{
-                console.log("This is the api result: ", res);
-                setFormInfo(res.data.results)
-            })
-            .catch(err=>{
-                console.log("Axios error: ", err);
-                setFormErrors(err)
-            });
+        const fetchOnePizza = async () => {
+            try {
+                const pizzaResponse = await axios.get(`${BASE_URL}/pizzas/show_one/${_id}`);
 
-            setToppingBooleans(PizzaService.toppingIsChecked(...formInfo.toppings))
+        
+                setFormInfo(pizzaResponse.data.results);
+                console.log("THIS IS THE PIZZA RESULT INFO: ", pizzaResponse)
+                const newPrices = priceSetter(pizzaResponse.data.results)
+                setBasePrices(newPrices)
+                setIsFetched(true)
+                
+            } catch (err) {
+                console.error('Axios error fetching edit pizza form info:', err);
+            }
+        };
+        
+        fetchOnePizza();
+        console.log("THIS IS THE NEW BASE PRICE OUTSIDE THE EDIT FETCH: ", basePrices)
+        console.log("DB toppings list OUTSIDE EDIT FETCH: ", allDBToppings);
 
-        // sizePriceSetter();
-        // crustPriceSetter();
-        // toppingPriceSetter();
     }, []);
 
 
 
 
-    // // changehandler to update the formInfo object with the information from the form
-    // const changeHandler = (e)=>{
-    //     console.log("changing the form!")
-    //     setFormInfo({
-    //         ...formInfo,
-    //         [e.target.name]: e.target.value
-    //     })
-    // }
-
-    // // submitHandler for when the form submits we send this date to backend to create a new object
-    // const submitUpdatePizza = (e)=>{
-    //     e.preventDefault();
-        
-    //     axios.put(`http://localhost:8000/api/pizzas/update/${_id}`, formInfo)
-    //     .then((res)=>{
-    //         console.log("Response after axios put request: ", res);
-    //         if(res.data.error){
-    //             // this means there are validation errors we need to save
-    //             setFormErrors(res.data.error.errors);
-    //         }
-    //         else{
-    //             navigate("/dashboard");
-    //             window.location.reload();
-    //         }
-    //     })
-    //     .catch(err=>{
-    //         console.log("Axios POST Route error: ", err)
-    //     })
-    // }    
     
     const submitHandler = (e)=>{
         e.preventDefault();
 
-        setFormInfo({
-            ...formInfo,
-            price:{
-                ...formInfo.price,
-                total: PizzaService.sumTotalPrice(...formInfo.price, ...formInfo.quantity)
-            }
-        })
-        PizzaService.submitUpdatePizza(formInfo, _id)
+        axios.post(`http://localhost:8000/api/pizzas/${_id}`, formInfo)
         .then((res)=>{
             console.log("Response after axios put request: ", res);
-            navigate("pizza-time/order-summary");
+            navigate("/pizza-time/order-summary");        //redirect after updataing form
             window.location.reload();
-            // history.push("/") //redirect after updataing form
+        
         })
         .catch(err=>{
             console.log("Axios POST Route error: ", err)
         })
+
     }    
 
-    
-    return (
-        <>
-            <h3>Edit an Expense</h3>
-            <PizzaForm
-                // changeHandler={changeHandler}
-                submitHandler={submitHandler}
+    if (isFetched){
+        return (
+            <>
+                <h3>Edit an Expense</h3>
+                {console.log("this is the edit pizza RENDER")}
+                <div>
+                    <div className="row">
+                        <div className="col" style={{maxWidth: "800px",}}>
+                            <PizzaForm
+                                submitHandler={submitHandler}
+                                formInfo={formInfo}
+                                setFormInfo={setFormInfo}
+                                basePrices={basePrices}
+                                setBasePrices={setBasePrices}
+                                priceSetter={priceSetter}
 
-                formInfo={formInfo}
-                setFormInfo={setFormInfo}
+                                allDBSauces={allDBSauces}
+                                allDBToppings={allDBToppings}
+                                allDBCrusts={allDBCrusts}
+                                allDBPieSizes={allDBPieSizes}
 
-                toppingBooleans={toppingBooleans}
-                setToppingBooleans={setToppingBooleans}
+                                // setAllDBSauces={setAllDBSauces}
+                                // setAllDBToppings={setAllDBToppings}
+                                // setAllDBCrusts={setAllDBCrusts}
+                                // setAllDBPieSizes={setAllDBPieSizes}
 
-                // priceBreakdown={priceBreakdown}
-                // setPriceBreakdown={setPriceBreakdown}
+                                formErrors={formErrors}
+                                buttonValue = "ADD TO ORDER">
+                            </PizzaForm>
+                        </div>
 
-                // allDBToppings={allDBToppings}
-                // setAllDBToppings={setAllDBToppings}
-
-                // allDBCrusts={allDBCrusts}
-                // setAllDBCrusts={setAllDBCrusts}
-
-                // allDBPieSizes={allDBPieSizes}
-                // setAllDBPieSizes={setAllDBPieSizes}
-
-                formErrors={formErrors}
-                buttonValue = "UPDATE ORDER"
-                loggedUser={loggedUser}
-            />
-        </>
-    );
+                        <div className="col" style={{width: "800px",}}>
+                            <h1 className="">Total Price:</h1>
+                            <h1 className="">{formInfo.price.toFixed(2)}</h1>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    }
 }
 
-export default WithAuth(EditExpense);
+export default EditExpense;
