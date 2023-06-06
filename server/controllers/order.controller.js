@@ -17,6 +17,18 @@ module.exports.findAllOrders = (req, res) =>{
         })
 }
 
+module.exports.findAllUserOrders = (req, res) =>{
+    Order.find()
+    .where('user_id').equals(req.params.id)
+    .populate("pizza_id")
+        .then(allOrders=>{
+            res.json({results: allOrders})
+        })
+        .catch(err=>{
+            res.json({msg: "Something went wrong in the order controller: ", error: err})
+        })
+}
+
 module.exports.createOrder = (req, res)=>{
     // req.body represents the form information
     Order.create(req.body)
@@ -33,6 +45,21 @@ module.exports.findOneOrder = (req, res)=>{
     Order.findOne({_id: req.params.id})
         .then(foundOrder => {
             res.json({results: foundOrder})
+        })
+        .catch(err=> {
+            res.json({msg: "Something went wrong in the order controller: ", error: err})
+        })
+}
+
+module.exports.updateOrderFavorites = (req, res)=>{
+    // req.body represents the form information
+    Order.findOneAndUpdate(
+        {_id: req.params.id},
+        {isFavorite: !isFavorite},
+        {new: true, runValidators: true}
+    )
+        .then(updateOrder => {
+            res.json({results: updateOrder})
         })
         .catch(err=> {
             res.json({msg: "Something went wrong in the order controller: ", error: err})

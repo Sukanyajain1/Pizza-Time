@@ -16,7 +16,7 @@ const OrderSchema = new mongoose.Schema ({
         ref: "Pizza" //this is the name of my Pizza Model from the pizza.model.js
     }],
     deliveryMethod: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         required: [true, 'Delivery Method is required'],
         ref: 'DeliveryMethod'
     },

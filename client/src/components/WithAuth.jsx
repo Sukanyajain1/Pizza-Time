@@ -26,7 +26,7 @@ const WithAuth = (Component) => {
           // User is not logged in
           setIsLogged(false);
           setIsLoading(false);
-          navigate("/welcome/login", { replace: true });
+          navigate("/welcome/signin", { replace: true });
         }
       };
 

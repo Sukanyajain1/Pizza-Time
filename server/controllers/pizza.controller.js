@@ -53,10 +53,7 @@ module.exports.findPendingPizzas = (req, res)=>{
     // req.body represents the form information
     Pizza.find()
     .where('orderStatus').equals("pending")
-    .populate("crust", ["_id", "name", "price"])
-    .populate("pizzaSize", ["_id", "name", "price"])
-    .populate("sauce", ["_id", "name", "price"])
-    .populate("toppings", ["_id", "name", "price"])
+    .where('user_id').equals(req.params.id)
     .populate("user_id", ["_id", "firstName", "lastName"])
         .then(allPizzasInCart => {
             res.json({results: allPizzasInCart})

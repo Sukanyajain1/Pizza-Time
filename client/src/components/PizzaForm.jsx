@@ -29,44 +29,6 @@ const PizzaForm = (props) => {
 
 
 
-
-    const BASE_URL = 'http://localhost:8000/api';
-
-
-
-    // useEffect(() => {
-    //     const fetchIngredients = async () => {
-    //         try {
-    //             const sizeResponse = await axios.get(`${BASE_URL}/pizzaSizes`);
-    //             const crustResponse = await axios.get(`${BASE_URL}/crusts`);
-    //             const sauceResponse = await axios.get(`${BASE_URL}/sauces`);
-    //             const toppingsResponse = await axios.get(`${BASE_URL}/toppings`);
-        
-    //             setAllDBPieSizes(sizeResponse.data.results);
-    //             setAllDBCrusts(crustResponse.data.results);
-    //             setAllDBSauces(sauceResponse.data.results);
-    //             setAllDBToppings(toppingsResponse.data.results);
-
-    //             // priceSetter(formInfo)
-
-    //             console.log("ENDING THE FETCH FUNCTION INSIDE PIZZA FORM")
-
-    //         } catch (error) {
-    //             console.error('Error fetching ingredients:', error);
-    //         }
-    //     };
-    
-    //     fetchIngredients();
-    //     console.log("OUTSIDE THE FETCH FUNCTION IN THE PIZZA FORM")
-    //     // priceSetter()
-    // }, []);
-// there will be a change handler that only triggers a useEffect function
-// the useEffect function will perform the change handler
-// this will be because the change handler will set the base prices for the pizza and change the form info accordingly---> NOT
-// each pizza component will have their own inital formInfo and basePrices state variables that are initialized differently.
-// the pizza route will house the axios calls for all ingredients
-
-
 // function that returns an object with the new form information in a const variable
     const functionNumber1_NEWFORM_OBJ = (e)=>{
         // this function will return a const variable containing the new formInfo object (not the state variable, but a new object that contains all the new info for it)
@@ -96,20 +58,20 @@ const PizzaForm = (props) => {
                 [e.target.name]: eventPrice
             })
         }else{         //THIS IS THE TOPPING HANDLER
-            const toppingId = e.target.dataset.id
-            if(newFormInfo[e.target.name].includes(e.target.dataset.id)) {
+            // const toppingId = e.target.dataset.id
+            if(newFormInfo[e.target.name].includes(e.target.value)) {
     
                 // Remove the existing id 
-                newFormInfo[e.target.name] = newFormInfo[e.target.name].filter(item => item !== toppingId)
+                newFormInfo[e.target.name] = newFormInfo[e.target.name].filter(item => item !== e.target.value)
 
             } else {
                 // Add new id
-                newFormInfo[e.target.name] = [...newFormInfo[e.target.name], toppingId]
+                newFormInfo[e.target.name] = [...newFormInfo[e.target.name], e.target.value]
             }
 
             //caluclate the price of the toppings list
             let newToppingPrice = allDBToppings.reduce((total, topping) =>
-                total + (newFormInfo["toppings"].includes(topping._id)? Number(topping.price) : 0),
+                total + (newFormInfo["toppings"].includes(topping.name)? Number(topping.price) : 0),
                 0
             );
             newFormInfo.priceBreakdown[e.target.name] = newToppingPrice;
@@ -160,7 +122,7 @@ const PizzaForm = (props) => {
                         {
                             allDBPieSizes.map((sizeObj, idx)=>{
                                 return(
-                                    <option key={idx} data-price={sizeObj.price} value={sizeObj._id}>{sizeObj.name} - {sizeObj.price}</option>
+                                    <option key={idx} data-price={sizeObj.price} value={sizeObj.name}>{sizeObj.name} - ${sizeObj.price}</option>
                                 )
                             })
                         }
@@ -174,7 +136,7 @@ const PizzaForm = (props) => {
                         {
                             allDBCrusts.map((crustObj, idx)=>{
                                 return(
-                                    <option key={idx} data-price={crustObj.price} value={crustObj._id}>{crustObj.name} - {crustObj.price}</option>
+                                    <option key={idx} data-price={crustObj.price} value={crustObj.name}>{crustObj.name} - ${crustObj.price}</option>
                                 )
                             })
                         }
@@ -191,8 +153,8 @@ const PizzaForm = (props) => {
                                     <option
                                         key={idx}
                                         data-price={sauceObj.price}
-                                        value={sauceObj._id}>
-                                            {sauceObj.name} - {sauceObj.price}
+                                        value={sauceObj.name}>
+                                            {sauceObj.name} - ${sauceObj.price}
                                     </option>
                                 )
                             })
@@ -212,13 +174,13 @@ const PizzaForm = (props) => {
                             key={idx}
                             style={{margin: "20px", gap: "10px"}}>
                                 {/* <p className='text-success'>{toppingObj.checkedKey}</p> */}
-                                <span className="align-middle" htmlFor="">{toppingObj.name} - {idx}</span>
+                                <span className="align-middle" htmlFor="">{toppingObj.name}</span>
                                 <input
                                     type="checkbox"
                                     name="toppings"
-                                    data-id={toppingObj._id}
+                                    value={toppingObj.name}
                                     onChange={functionNumber2_FINALBOSS}
-                                    checked={formInfo.toppings.includes(toppingObj._id)?true: false}
+                                    checked={formInfo.toppings.includes(toppingObj.name)?true: false}
                                     className="form-check-input" />
                             </div>
                         )

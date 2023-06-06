@@ -1,34 +1,39 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios'
-import { useNavigate, Link, redirect } from 'react-router-dom';
-
+import { useNavigate, NavLink, redirect } from 'react-router-dom';
+import '../App.css'
 import WithAuth from './WithAuth';
+import SigninNav from './SigninNav';
+import NavWrapper from '../styles/NavWrapper';
 
 
 const TopNav = (props) => {
 
     // const {currentUser, setCurrentUser} = props;
-    const {currentUser, isLogged, handleLogout} = props;
+    const {currentUser, isLogged, isMember, setIsMember, handleLogout} = props;
 
     const navigate = useNavigate();
     const [numInCart, setNumInCart] = useState();
 
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/pizzas/in_cart/${currentUser._id}`)
-        .then((res)=>{
-            console.log("This is the api result: ", res);
-            setNumInCart((res.data.results).length);
-        })
-        .catch(err=>{
-            console.log("Axios error: ", err);
-        });
+
+        if(isLogged) {
+            axios.get(`http://localhost:8000/api/pizzas/in_cart/${currentUser._id}`)
+                .then((res)=>{
+                    console.log("This is the api result: ", res);
+                    setNumInCart((res.data.results).length);
+                })
+                .catch(err=>{
+                    console.log("Axios error: ", err);
+                });
+        }
     }, []);
 
     const logout = ()=>{
         axios.get("http://localhost:8000/api/users/logout", {withCredentials:true})
             .then(res=>{
-                navigate("/login", { replace: true });
+                navigate("/welcome/login", { replace: true });
             })
             .catch(err=>{
                 console.log("errrr logging out", err)
@@ -36,48 +41,27 @@ const TopNav = (props) => {
     }
     return (
         <div>
-{/* 
-            <nav>
-                <div className="navbar-left">
-                    <h1>Pizza Time!</h1>
-                </div>
-                <div className="navbar-right">
-                    {isLogged ? (
-                    <>
-                        <Link to="/dashboard">Dashboard</Link>
-                        <Link to="/order-summary">Order Summary</Link>
-                        <Link to="/account-info">Account Info</Link>
-                        <button onClick={logout}>Logout</button>
-                    </>
-                    ) : (
-                    <>
-                        <Link to="/login">Login</Link>
-                        <Link to="/register">Register</Link>
-                    </>
-                    )}
-                </div>
-            </nav> */}
 
-            <nav className="navbar navbar-expand-lg navbar-light" style={{backgroundColor: "#e3f2fd"}}>
-                <div className="">
-                    <div className="d-flex justify-content-between container-fluid">
+
+                <div className="nav">
+                    <div className="container d-flex align-items-center justify-content-between">
                         <h2>Pizza time!</h2>
                         {isLogged ? (
-                            <div className="" style={{gap: "40px"}}>
-                                <Link to="/pizza-time/dashboard">Dashboard</Link>
-                                <Link to="/pizza-time/order-summary">Order Summary ({numInCart})</Link>
-                                <Link to="/pizza-time/account-info">Account Info</Link>
-                                <Link to="/pizza-time/logout">Logout</Link>
-                            </div>
-                            ) : (
-                            <div className="">
-                                <Link to="/welcome/login">Login</Link>
-                                <Link to="/welcome/register">Register</Link>
-                            </div>
-                            )}
+                            <NavWrapper>
+                            {/* <div> */}
+
+                                <NavLink to="/pizza-time/dashboard" className={({isActive}) => (isActive ? "active-style" : 'none')}>Dashboard</NavLink>
+                                <NavLink to="/pizza-time/order-summary" className={({isActive}) => (isActive ? "active-style" : 'none')}>Order Summary ({numInCart})</NavLink>
+                                <NavLink to="/pizza-time/account-info" className={({isActive}) => (isActive ? "active-style" : 'none')}>Account Info</NavLink>
+                                <NavLink onClick={logout} className={({isActive}) => (isActive ? "active-style" : 'none')}>Logout</NavLink>
+                            {/* </div> */}
+                            </NavWrapper>
+                        ) : 
+                        <SigninNav isMember={isMember} setIsMember={setIsMember}></SigninNav>
+
+                        }
+                    </div>
                 </div>
-                </div>
-            </nav>
         </div>
     );
     // }
@@ -86,50 +70,3 @@ const TopNav = (props) => {
 
 export default WithAuth(TopNav);
 
-
-
-
-
-
-
-
-
-
-
-// {isLogged? (
-//     <div className="navbar-nav ml-auto">
-//         <li>
-//             {/* {console.log(isLogged)} */}
-//         </li>
-//         <li className="nav-item">
-//             <Link to={"pizza-time/dashboard"} className="nav-link">DASHBOARD</Link>
-//         </li>
-//         <li className="nav-item">
-//             <Link to={"pizza-time/order"} className="nav-link">ORDER ({numInCart})</Link>
-//         </li>
-//         <li className="nav-item">
-//             <Link to={"pizza-time/profile"} className="nav-link">{currentUser.firstName}'s ACCOUNT</Link>
-//         </li>
-//         <li className="nav-item">
-//             <a href="welcome/login" className="nav-link" onClick={logout}>LOG OUT</a>
-//         </li>
-//     </div>
-//     ) : isMember?(
-//     <div className="navbar-nav ml-auto">
-//         <li>
-//             {/* {console.log(isLogged)} */}
-//         </li>
-//         <li className="nav-item">
-//             <Link to={"welcome/register"} onClick={(e)=>{setIsMember(false)}} className="nav-link">New User? Create an Account</Link>
-//         </li>
-//     </div>
-//     ) : (
-//     <div className="navbar-nav ml-auto">
-//         <li>
-//             {/* {console.log(isLogged)} */}
-//         </li>
-//         <li className="nav-item">
-//             <Link to={"welcome/login"} onClick={(e)=>{setIsMember(true)}} className="nav-link">Already have an account? Login</Link>
-//         </li>
-//     </div>
-// )}

@@ -8,7 +8,6 @@ import axios from "axios";
 
 const EditExpense = () => {
 
-// , allDBSauces, allDBToppings, allDBCrusts, allDBPieSizes
 
     const [currentUser, isLogged, allDBSauces, allDBToppings, allDBCrusts, allDBPieSizes] = useOutletContext();
     const navigate = useNavigate();
@@ -16,16 +15,12 @@ const EditExpense = () => {
     const [isFetched, setIsFetched] = useState(false);
     const {_id} = useParams();
 
-    // const [allDBSauces, setAllDBSauces] = useState([]);
-    // const [allDBToppings, setAllDBToppings] = useState([]);
-    // const [allDBCrusts, setAllDBCrusts] = useState([]);
-    // const [allDBPieSizes, setAllDBPieSizes] = useState([]);
+
 
     // formInfo will be filled with info about the ninja we want to update
     const [formInfo, setFormInfo] = useState({});
     const [basePrices, setBasePrices] = useState({});
-    const BASE_URL = 'http://localhost:8000/api';
-
+    
     const priceSetter = (formData)=>{
         // this function will return an object of base prices to set in the state variable 
         let newPrices = {
@@ -35,10 +30,7 @@ const EditExpense = () => {
             toppings: 0
         }
         console.log("STARTING THE PRICE SETTER")
-        // let newSize = 0;
-        // let newCrust = 0;
-        // let newSauce = 0;
-        // let newToppings = 0;
+        
         // =====================================================================================
         // PIZZA SIZE
         // =====================================================================================
@@ -66,46 +58,29 @@ const EditExpense = () => {
         // =====================================================================================
         // TOPPINGS
         // =====================================================================================
-        // allDBToppings.map((toppingObj)=>{
-        //     toppingObj._id===formData.topping?
-        //     newPrices.toppings = toppingObj.price.toFixed(2) :
-        //     console.log("topping price was not: ", toppingObj.price)
-        // })
-        // const middleVal = (formData.price - newPrices.pizzaSize - newPrices.crust - newPrices.sauce - newPrices.toppings)
+        
         newPrices.toppings = Number(formData.price - newPrices.pizzaSize - newPrices.crust - newPrices.sauce - newPrices.toppings)
         
-
-        // newPrices.pizzaSize
-        // newPrices.crust
-        // newPrices.sauce
-        // newPrices.toppings
-        // setBasePrices({
-        //     ...basePrices,
-        //     pizzaSize: newPrices.size,
-        //     crust: newPrices.crust,
-        //     sauce: newPrices.sauce,
-        //     toppings: newPrices.toppings,
-        // })
-
+        
         console.log("THIS IS THE NEW SIZE PRICE: ", newPrices.pizzaSize);
         console.log("THIS IS THE NEW CRUST PRICE: ", newPrices.crust);
         console.log("THIS IS THE NEW SAUCE PRICE: ", newPrices.sauce);
         console.log("THIS IS THE NEW TOPPINGS PRICE: ", newPrices.toppings);
-        // console.log("DB toppings list: ", allDBToppings);
-
+        
         return newPrices
-
+        
     }
-
-
-
+    
+    
+    const BASE_URL = 'http://localhost:8000/api';
+    
     useEffect(() => {
-
+        
         const fetchOnePizza = async () => {
             try {
                 const pizzaResponse = await axios.get(`${BASE_URL}/pizzas/show_one/${_id}`);
-
-        
+                
+                
                 setFormInfo(pizzaResponse.data.results);
                 console.log("THIS IS THE PIZZA RESULT INFO: ", pizzaResponse)
                 const newPrices = priceSetter(pizzaResponse.data.results)
@@ -163,11 +138,6 @@ const EditExpense = () => {
                                 allDBToppings={allDBToppings}
                                 allDBCrusts={allDBCrusts}
                                 allDBPieSizes={allDBPieSizes}
-
-                                // setAllDBSauces={setAllDBSauces}
-                                // setAllDBToppings={setAllDBToppings}
-                                // setAllDBCrusts={setAllDBCrusts}
-                                // setAllDBPieSizes={setAllDBPieSizes}
 
                                 formErrors={formErrors}
                                 buttonValue = "ADD TO ORDER">

@@ -157,14 +157,14 @@ const OrderSummary = (props) => {
                                                 return (
                                                     <div key={idx} className="row border">
                                                         <div className="col">
-                                                            <p><strong>Size:</strong> {pizzaObj.pizzaSize.name}</p>
-                                                            <p><strong>Crust:</strong> {pizzaObj.crust.name}</p>
+                                                            <p><strong>Size:</strong> {pizzaObj.pizzaSize}</p>
+                                                            <p><strong>Crust:</strong> {pizzaObj.crust}</p>
                                                             <p className=""><strong>Toppings:</strong>
                                                                 <span className="d-flex flex-wrap">
                                                                     {
                                                                         pizzaObj.toppings.map((toppingObj, idx)=>{
                                                                             return (
-                                                                                <li key={idx} className="mx-2" style={{listStyle: "none"}}>{toppingObj.name}</li>
+                                                                                <li key={idx} className="mx-2" style={{listStyle: "none"}}>{toppingObj}</li>
                                                                             )
                                                                         })
                                                                     }
@@ -199,7 +199,7 @@ const OrderSummary = (props) => {
                                     {
                                         deliveryMethodsList.map((deliveryObj, idx)=>{
                                             return(
-                                                <option key={idx} data-price={deliveryObj.price} value={deliveryObj._id}>{deliveryObj.name}</option>
+                                                <option key={idx} data-price={deliveryObj.price} value={deliveryObj.name}>{deliveryObj.name}</option>
                                             )
                                         })
                                     }

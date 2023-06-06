@@ -22,58 +22,42 @@ import PizzaRoute from './components/PizzaRoute';
 
 
 
-// all wrapped components-- HOC workaround
-const MainContentWithAuth = WithAuth(MainContent);        //custom HOC
-// const DashWithAuth = WithAuth(Dashboard);
-const NavWithAuth = WithAuth(TopNav);
-// const NewPizzaWithAuth = WithAuth(NewPizza);
-// const EditPizzaWithAuth = WithAuth(EditPizza);
-// const OrderSumWithAuth = WithAuth(OrderSummary);
 
 function App() {
-
+  // all wrapped components-- HOC workaround
+  const MainContentWithAuth = WithAuth(MainContent);        //custom HOC
+  // const DashWithAuth = WithAuth(Dashboard);
+  const NavWithAuth = WithAuth(TopNav);
+  // const NewPizzaWithAuth = WithAuth(NewPizza);
+  // const EditPizzaWithAuth = WithAuth(EditPizza);
+  // const OrderSumWithAuth = WithAuth(OrderSummary);
+  
+  const [isMember, setIsMember] = useState(true);
 
   return (
-    <div className="">
-      {/* <TopNav/>
-      <div>
+
+    <div className="container-fluid">
+      <NavWithAuth isMember={isMember} setIsMember={setIsMember}/>
+      <div className="container mt-3">
         <Routes>
-          <Route exact path="/" component={LoginForm} />
-          <Route path="/login" component={LoginForm} />
-          <Route path="/register" component={RegistrationForm} />
-          <Route path="/dashboard" component={WithAuth(Dashboard)} />
-          <Route path="/new-pizza" component={WithAuth(NewPizza)} />
-          <Route path="/edit-pizza/:id" component={WithAuth(EditPizza)} />
-          <Route path="/order-summary" component={WithAuth(OrderSummary)} />
-          <Route path="/account-info" component={WithAuth(AccountInfo)} />
+          <Route path = "welcome/signin" element= {<SignIn isMember={isMember} setIsMember={setIsMember}/>}>
+            {/* <Route path="login" element={<LoginForm />} />
+            <Route path="register" element={<RegistrationForm/>} /> */}
+          </Route>
+          <Route path = "pizza-time" element= {<MainContentWithAuth/>}>
+            <Route path = "dashboard" element={<Dashboard/>}/>
+            <Route path = "order-summary" element={<OrderSummary/>}/>
+            <Route path = "account-info" element={<AccountInfo/>}/>
+            <Route path = "pizza" element= {<PizzaRoute/>}>
+              <Route path="new" element={<NewPizza/>}/>
+              <Route path = "edit/:_id" element={<EditPizza/>}/>
+            </Route>
+          </Route>
         </Routes>
-      </div> */}
-
-
-
-      <div className="">
-        <NavWithAuth/>
-        <div className="container mt-3">
-          <Routes>
-            <Route path = "welcome" element= {<SignIn/>}>
-              <Route path="login" element={<LoginForm/>} />
-              <Route path="register" element={<RegistrationForm/>} />
-            </Route>
-            <Route path = "pizza-time" element= {<MainContentWithAuth/>}>
-              <Route path = "dashboard" element={<Dashboard/>}/>
-              <Route path = "order-summary" element={<OrderSummary/>}/>
-              <Route path = "account-info" element={<AccountInfo/>}/>
-              <Route path = "pizza" element= {<PizzaRoute/>}>
-                <Route path="new" element={<NewPizza/>}/>
-                <Route path = "edit/:_id" element={<EditPizza/>}/>
-              </Route>
-            </Route>
-          </Routes>
-        </div>
       </div>
-
-      
     </div>
+
+
   );
 }
 

@@ -2,23 +2,19 @@ const mongoose = require("mongoose")
 
 const PizzaSchema = new mongoose.Schema ({
     crust: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Crust',
-        required: true
+        type: String,
+        required: [true, "Crust is required!"]
     },
     pizzaSize: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'PizzaSize',
-        required: true
+        type: String,
+        required: [true, "Pizza size is required!"]
     },
     toppings: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Topping'
+        type: String
     }],
     sauce: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Sauce',
-        required: true
+        type: String,
+        required: [true, "Sauce is required!"]
     },
     price: {
         type: Number,

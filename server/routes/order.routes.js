@@ -15,6 +15,8 @@ module.exports = (app)=>{
     
     */
 
+    app.get("/api/orders/past/:id", OrderController.findAllUserOrders);
+    app.get("/api/orders/favorite/:id", OrderController.updateOrderFavorites);
     app.get("/api/orders/:id", OrderController.findOneOrder);
     app.put("/api/orders/:id", OrderController.updateOrder);
     app.delete("/api/orders/:id", OrderController.deleteOrder);
