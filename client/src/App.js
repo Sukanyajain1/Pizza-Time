@@ -20,6 +20,8 @@ import WithAuth from './components/WithAuth';
 import AccountInfo from './components/AccountInfo'
 import PizzaRoute from './components/PizzaRoute';
 
+
+
 // all wrapped components-- HOC workaround
 const MainContentWithAuth = WithAuth(MainContent);        //custom HOC
 // const DashWithAuth = WithAuth(Dashboard);
@@ -28,10 +30,8 @@ const NavWithAuth = WithAuth(TopNav);
 // const EditPizzaWithAuth = WithAuth(EditPizza);
 // const OrderSumWithAuth = WithAuth(OrderSummary);
 
-
-
-
 function App() {
+
 
   return (
     <div className="">
@@ -62,6 +62,7 @@ function App() {
             <Route path = "pizza-time" element= {<MainContentWithAuth/>}>
               <Route path = "dashboard" element={<Dashboard/>}/>
               <Route path = "order-summary" element={<OrderSummary/>}/>
+              <Route path = "account-info" element={<AccountInfo/>}/>
               <Route path = "pizza" element= {<PizzaRoute/>}>
                 <Route path="new" element={<NewPizza/>}/>
                 <Route path = "edit/:_id" element={<EditPizza/>}/>

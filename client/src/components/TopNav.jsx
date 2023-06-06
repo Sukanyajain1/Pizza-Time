@@ -8,10 +8,22 @@ import WithAuth from './WithAuth';
 const TopNav = (props) => {
 
     // const {currentUser, setCurrentUser} = props;
-    const {currentUser, numInCart, isLogged, handleLogout} = props;
+    const {currentUser, isLogged, handleLogout} = props;
 
     const navigate = useNavigate();
+    const [numInCart, setNumInCart] = useState();
 
+
+    useEffect(() => {
+        axios.get(`http://localhost:8000/api/pizzas/in_cart/${currentUser._id}`)
+        .then((res)=>{
+            console.log("This is the api result: ", res);
+            setNumInCart((res.data.results).length);
+        })
+        .catch(err=>{
+            console.log("Axios error: ", err);
+        });
+    }, []);
 
     const logout = ()=>{
         axios.get("http://localhost:8000/api/users/logout", {withCredentials:true})
@@ -53,7 +65,7 @@ const TopNav = (props) => {
                         {isLogged ? (
                             <div className="" style={{gap: "40px"}}>
                                 <Link to="/pizza-time/dashboard">Dashboard</Link>
-                                <Link to="/pizza-time/order-summary">Order Summary</Link>
+                                <Link to="/pizza-time/order-summary">Order Summary ({numInCart})</Link>
                                 <Link to="/pizza-time/account-info">Account Info</Link>
                                 <Link to="/pizza-time/logout">Logout</Link>
                             </div>

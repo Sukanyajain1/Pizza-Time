@@ -27,7 +27,8 @@ const PizzaSchema = new mongoose.Schema ({
     },
     orderStatus: {
         type: String,
-        required: [true, "Order status is required."]
+        required: [true, "Order status is required."],
+        enum: ["pending", "submitted"]
     },
     // add the user._id for the user that created this object
     user_id: {

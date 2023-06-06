@@ -103,7 +103,7 @@ const NewPizza = () => {
 
                     <div className="col" style={{width: "800px",}}>
                         <h1 className="">Total Price:</h1>
-                        <h1 className="">{formInfo.price}</h1>
+                        <h1 className="">${formInfo.price.toFixed(2)}</h1>
                     </div>
                 </div>
             </div>:

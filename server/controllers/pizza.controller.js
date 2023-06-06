@@ -81,6 +81,21 @@ module.exports.updatePizza = (req, res)=>{
         })
 }
 
+module.exports.updatePizzaStatus = (req, res)=>{
+    // req.body represents the form information
+    Pizza.findOneAndUpdate(
+        {_id: req.params.id},
+        {orderStatus: "submitted"},
+        {new: true, runValidators: true}
+    )
+        .then(updatePizza => {
+            res.json({results: updatePizza})
+        })
+        .catch(err=> {
+            res.json({msg: "Something went wrong in the pizza controller: ", error: err})
+        })
+}
+
 module.exports.deletePizza = (req, res)=>{
     // req.body represents the form information
     Pizza.deleteOne({_id: req.params.id})

@@ -231,8 +231,8 @@ const PizzaForm = (props) => {
                 <p className="text-danger">{formErrors.order_id?.message}</p>
             </form>
 
-            <h1>{formInfo.toppings}</h1>
-            {console.log("THIS IS THE FORM TOPPINGS: ", formInfo.toppings)}
+            {/* <h1>{formInfo.toppings}</h1>
+            {console.log("THIS IS THE FORM TOPPINGS: ", formInfo.toppings)} */}
         </>
     );
 }

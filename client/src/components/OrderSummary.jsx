@@ -1,12 +1,13 @@
 import React, {useEffect, useState, useParams} from 'react';
 import axios from 'axios';
-import WithAuth from './WithAuth';
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useOutletContext } from "react-router-dom";
 
 
 const OrderSummary = (props) => {
 
-    const {currentUser, numInCart, setNumInCart} = props;
+    // const {currentUser, numInCart, setNumInCart} = props;
+    const [currentUser, isLogged] = useOutletContext();
+
     const [deleteToggle, setDeleteToggle] = useState();
 
     const navigate = useNavigate();
@@ -14,8 +15,10 @@ const OrderSummary = (props) => {
     const [orderItemsList, setOrderItemsList] = useState([]);
     const [deliveryMethodsList, setDeliveryMethodsList] = useState([]);
     const [orderInfo, setOrderInfo] = useState({
+        user_id: currentUser._id,
         deliveryMethod: "",
         pizza_id: [],
+        isFavorite: false,
         totalAfterTax: null,
     
         // add the user._id for the user that created this object
@@ -37,8 +40,15 @@ const OrderSummary = (props) => {
         );
         
         const finalBaseVal = sumWithInitial + deliveryFee
-        setBeforeTax(finalBaseVal.toFixed(2))
-        setAfterTax((finalBaseVal * 1.08875).toFixed(2))
+        const finalAfterTax = finalBaseVal * 1.08875
+        setBeforeTax(Math.round((finalBaseVal + Number.EPSILON) * 100) / 100)
+        setAfterTax(Math.round((finalAfterTax + Number.EPSILON) * 100) / 100)
+        // Math.round((finalAfterTax + Number.EPSILON) * 100) / 100
+        // setOrderInfo({
+        //     ...orderInfo,
+        //     totalAfterTax: (Math.round((finalAfterTax + Number.EPSILON) * 100) / 100)
+        // })
+        return finalAfterTax
     }
     
     const BASE_URL = 'http://localhost:8000/api';
@@ -50,11 +60,17 @@ const OrderSummary = (props) => {
                 const cartItemsResponse = await axios.get(`${BASE_URL}/pizzas/in_cart/${currentUser._id}`);
         
                 setDeliveryMethodsList(deliveryMethodResponse.data.results);
+                
+                setOrderItemsList(cartItemsResponse.data.results);
+                const newOrderItems = []
+                cartItemsResponse.data.results.forEach((item)=> newOrderItems.push(item._id))
+                const totalOrderAmount = priceSetter(cartItemsResponse.data.results)
                 setOrderInfo({
                     ...orderInfo,
-                    pizza_id: cartItemsResponse.data.results
+                    pizza_id: newOrderItems,
+                    totalAfterTax: Math.round((totalOrderAmount + Number.EPSILON) * 100) / 100
                 });
-                priceSetter(cartItemsResponse.data.results)
+                // set
             } catch (error) {
                 console.error('Error fetching Order Summary Info:', error);
             }
@@ -87,8 +103,18 @@ const OrderSummary = (props) => {
         setDeliveryFee(eventPrice)
     }
 
+
+
+
+
     const purchaseHandler = (e)=>{
         e.preventDefault();
+        // for all the pizzas in the order Info pizza_id list, update the the orderStatus for each pizza to be "submitted"
+        orderInfo.pizza_id.forEach((id)=>
+            axios.put(`http://localhost:8000/api/pizzas/orderStatus/${id}`)
+                .then((res)=>console.log("axios order status update result: ", res))
+                .catch(err=>console.log("axios order status update error: ", err))
+        )
         
         axios.post("http://localhost:8000/api/orders", orderInfo)
         .then((res)=>{
@@ -127,7 +153,7 @@ const OrderSummary = (props) => {
                             <h3>YOUR ORDER</h3>
                                     <div>
                                         {
-                                            orderInfo.pizza_id.map((pizzaObj, idx)=>{
+                                            orderItemsList.map((pizzaObj, idx)=>{
                                                 return (
                                                     <div key={idx} className="row border">
                                                         <div className="col">
@@ -156,9 +182,9 @@ const OrderSummary = (props) => {
                                         }
                                     </div>
                                     <br />
-                            <h4 className="">Before Tax: $ {Number(beforeTax).toFixed(2)}</h4>
+                            <h4 className="">Before Tax: ${beforeTax.toFixed(2)}</h4>
                             <hr />
-                            <h3 className="">TOTAL:  ${Number(afterTax).toFixed(2)}</h3>
+                            <h3 className="">TOTAL:  ${afterTax.toFixed(2)}</h3>
                             <div className="d-flex justify-between">
                                 <Link to="/pizza-time/pizza/new" className="btn btn-warning border-dark mx-2">Add New Pizzas</Link>
                                 <button className="btn btn-success border-dark" onClick={purchaseHandler}>PURCHASE</button>
@@ -193,4 +219,4 @@ const OrderSummary = (props) => {
     );
 }
 
-export default WithAuth(OrderSummary);
+export default OrderSummary;

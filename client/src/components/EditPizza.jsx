@@ -130,7 +130,7 @@ const EditExpense = () => {
     const submitHandler = (e)=>{
         e.preventDefault();
 
-        axios.post(`http://localhost:8000/api/pizzas/${_id}`, formInfo)
+        axios.put(`http://localhost:8000/api/pizzas/${_id}`, formInfo)
         .then((res)=>{
             console.log("Response after axios put request: ", res);
             navigate("/pizza-time/order-summary");        //redirect after updataing form
